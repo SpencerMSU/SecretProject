@@ -26,7 +26,7 @@ public class ClientInputEvents {
         Minecraft mc = Minecraft.getInstance();
         if (mc.player == null) return;
         if (!isAltDown()) return;
-        double delta = event.getScrollDelta();
+	        double delta = event.getScrollDeltaY();
         if (delta == 0) return;
         ClientSpellState.cycleActiveIndex(delta < 0 ? 1 : -1);
         event.setCanceled(true);

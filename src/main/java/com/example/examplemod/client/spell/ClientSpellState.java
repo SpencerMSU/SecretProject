@@ -18,8 +18,8 @@ public final class ClientSpellState {
     private static final List<SpellEntry> FIRE_SPELLS = new ArrayList<>();
     private static final List<SpellEntry> WATER_SPELLS = new ArrayList<>();
 
-    private static final SpellEntry[] HOTBAR = new SpellEntry[HOTBAR_SLOTS];
     public static final int HOTBAR_SLOTS = 5;
+    private static final SpellEntry[] HOTBAR = new SpellEntry[HOTBAR_SLOTS];
 
     private static int activeIndex = 0; // 0..4
     private static SpellClass selectedClass = SpellClass.FIRE;
