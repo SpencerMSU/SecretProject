@@ -18,7 +18,6 @@ import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
-import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import com.example.examplemod.network.NetworkHandler;
 
 @Mod(ExampleMod.MODID)
@@ -28,6 +27,7 @@ public class ExampleMod {
 
     public ExampleMod(IEventBus modEventBus, ModContainer modContainer) {
         modEventBus.addListener(this::commonSetup);
+        modEventBus.addListener(NetworkHandler::register);
         NeoForge.EVENT_BUS.register(this);
 
         ModBlocks.register(modEventBus);
@@ -61,8 +61,5 @@ public class ExampleMod {
         }
     }
 
-    @SubscribeEvent
-    public static void registerPayloadHandlers(RegisterPayloadHandlersEvent event) {
-        NetworkHandler.register(event);
-    }
+    
 }
