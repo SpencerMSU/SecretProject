@@ -18,6 +18,15 @@ group = mod_group_id
 
 repositories {
     mavenLocal()
+    mavenCentral()
+    maven {
+        name = "NeoForged"
+        url = "https://maven.neoforged.net/releases/"
+    }
+    maven {
+        name = "Curios Maven"
+        url = "https://maven.theillusivec4.top/"
+    }
 }
 
 base {
@@ -112,6 +121,10 @@ configurations {
 }
 
 dependencies {
+    // Curios API dependency for accessories
+    compileOnly "top.theillusivec4.curios:curios-neoforge:9.1.1+1.21.1:api"
+    runtimeOnly "top.theillusivec4.curios:curios-neoforge:9.1.1+1.21.1"
+    
     // Example optional mod dependency with JEI
     // The JEI API is declared for compile time use, while the full JEI artifact is used at runtime
     // compileOnly "mezz.jei:jei-${mc_version}-common-api:${jei_version}"
