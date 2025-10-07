@@ -54,6 +54,11 @@ public class ExampleMod {
             LOGGER.info("HELLO FROM CLIENT SETUP");
             LOGGER.info("MINECRAFT NAME >> {}", Minecraft.getInstance().getUser().getName());
         }
+
+        @SubscribeEvent
+        public static void onRegisterKeyMappings(net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent event) {
+            event.register(com.example.examplemod.client.input.KeyBindings.OPEN_SPELLBOOK);
+        }
     }
 
     @SubscribeEvent

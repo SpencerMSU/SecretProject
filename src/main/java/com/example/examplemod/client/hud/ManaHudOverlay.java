@@ -1,6 +1,7 @@
 package com.example.examplemod.client.hud;
 
 import com.example.examplemod.client.ClientConfig;
+import com.example.examplemod.client.spell.ClientSpellState;
 import com.example.examplemod.mana.ManaProvider;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -68,6 +69,9 @@ public class ManaHudOverlay {
         String text = current + "/" + max;
         int tw = mc.font.width(text);
         g.drawString(mc.font, text, x - 6 - tw, y + barHeight - 8, 0xB3FFFFFF, true);
+
+        // Render spell hotbar aligned to the mana bar (vertical 5 slots)
+        renderSpellHotbar(g, x - 30, y, barHeight);
     }
 
     private static void fill(GuiGraphics g, int x, int y, int w, int h, int color) {
@@ -77,5 +81,43 @@ public class ManaHudOverlay {
     private static void verticalGradient(GuiGraphics g, int x, int y, int w, int h, int topColor, int bottomColor) {
         if (h <= 0) return;
         g.fillGradient(x, y, x + w, y + h, topColor, bottomColor);
+    }
+
+    private static void renderSpellHotbar(GuiGraphics g, int left, int manaBarTop, int manaBarHeight) {
+        Minecraft mc = Minecraft.getInstance();
+        ClientSpellState.ensureInitialized();
+
+        final int slots = ClientSpellState.getHotbarSize();
+        final int slotSize = 20;
+        final int gap = 4;
+        final int totalHeight = slots * slotSize + (slots - 1) * gap;
+        final int top = manaBarTop + (manaBarHeight - totalHeight) / 2;
+
+        int active = ClientSpellState.getActiveIndex();
+
+        for (int i = 0; i < slots; i++) {
+            int sx = left;
+            int sy = top + i * (slotSize + gap);
+
+            // Slot background
+            g.fill(sx - 2, sy - 2, sx + slotSize + 2, sy + slotSize + 2, 0xAA000000);
+            g.fill(sx - 1, sy - 1, sx + slotSize + 1, sy + slotSize + 1, 0xFF111827);
+
+            // Active outline
+            int outline = (i == active) ? 0xFF60A5FA : 0xFF374151;
+            g.fill(sx - 2, sy - 2, sx + slotSize + 2, sy - 1, outline);
+            g.fill(sx - 2, sy + slotSize + 1, sx + slotSize + 2, sy + slotSize + 2, outline);
+            g.fill(sx - 2, sy - 2, sx - 1, sy + slotSize + 2, outline);
+            g.fill(sx + slotSize + 1, sy - 2, sx + slotSize + 2, sy + slotSize + 2, outline);
+
+            var entry = ClientSpellState.getHotbarEntry(i);
+            if (entry != null) {
+                var itemRenderer = mc.getItemRenderer();
+                var pose = g.pose();
+                pose.pushPose();
+                g.renderItem(entry.icon(), sx + 2, sy + 2);
+                pose.popPose();
+            }
+        }
     }
 }
