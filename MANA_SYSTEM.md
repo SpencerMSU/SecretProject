@@ -109,6 +109,36 @@ By default, players start with:
 - **Regeneration Rate**: 0.1 per tick (2 per second)
 - **Color**: Blue (#00A0FF)
 
+## Testing the System
+
+### Test Item
+
+The mod includes a `Mana Test Item` that demonstrates mana consumption:
+- Costs 20 mana per use
+- Displays current mana values in chat
+- Shows "Not enough mana" message if insufficient
+
+To get the item, use: `/give @s examplemod:mana_test_item`
+
+### Commands
+
+The following commands are available for testing:
+
+```
+/mana get              - Display current and max mana
+/mana set <amount>     - Set current mana to a specific value
+/mana add <amount>     - Add mana (respects max limit)
+/mana setmax <amount>  - Set maximum mana capacity
+```
+
+Examples:
+```
+/mana get
+/mana set 50
+/mana add 25
+/mana setmax 200
+```
+
 ## Examples
 
 ### Creating a Magic Spell
