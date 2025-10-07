@@ -18,6 +18,8 @@ import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
+import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
+import com.example.examplemod.network.NetworkHandler;
 
 @Mod(ExampleMod.MODID)
 public class ExampleMod {
@@ -32,6 +34,8 @@ public class ExampleMod {
         ModItems.register(modEventBus);
 
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
+        // Client config (HUD etc.)
+        modContainer.registerConfig(ModConfig.Type.CLIENT, com.example.examplemod.client.ClientConfig.SPEC);
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {
@@ -50,5 +54,10 @@ public class ExampleMod {
             LOGGER.info("HELLO FROM CLIENT SETUP");
             LOGGER.info("MINECRAFT NAME >> {}", Minecraft.getInstance().getUser().getName());
         }
+    }
+
+    @SubscribeEvent
+    public static void registerPayloadHandlers(RegisterPayloadHandlersEvent event) {
+        NetworkHandler.register(event);
     }
 }
