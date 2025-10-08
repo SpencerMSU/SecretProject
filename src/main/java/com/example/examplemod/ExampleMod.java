@@ -32,6 +32,7 @@ public class ExampleMod {
 
         ModBlocks.register(modEventBus);
         ModItems.register(modEventBus);
+        com.example.examplemod.recipe.ModRecipes.register(modEventBus);
 
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
         // Client config (HUD etc.)

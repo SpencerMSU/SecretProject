@@ -1,3 +1,26 @@
 {
-
+  "_comment": "Enchantment Stone",
+  "item.examplemod.enchantment_stone": "Enchantment Stone",
+  
+  "_comment": "Fire Accessories",
+  "item.examplemod.fire_ring": "Fire Ring",
+  "item.examplemod.fire_necklace": "Fire Necklace",
+  "item.examplemod.fire_bracelet": "Fire Bracelet",
+  "item.examplemod.fire_belt": "Fire Belt",
+  "item.examplemod.fire_charm": "Fire Charm",
+  "item.examplemod.fire_cloak": "Fire Cloak",
+  
+  "_comment": "Water Accessories",
+  "item.examplemod.water_ring": "Water Ring",
+  "item.examplemod.water_necklace": "Water Necklace",
+  "item.examplemod.water_bracelet": "Water Bracelet",
+  "item.examplemod.water_belt": "Water Belt",
+  "item.examplemod.water_charm": "Water Charm",
+  "item.examplemod.water_cloak": "Water Cloak",
+  
+  "_comment": "Accessory Set Bonuses",
+  "accessory.examplemod.set_bonus.fire": "Fire Set Bonus: +5 Elemental Power, +3 Damage",
+  "accessory.examplemod.set_bonus.water": "Water Set Bonus: +30 Mana, +5 Mana Regen, +5 Defense",
+  "accessory.examplemod.max_set_bonus.fire": "MAX Fire Set: +15 Elemental Power, +10 Damage, +50 Mana",
+  "accessory.examplemod.max_set_bonus.water": "MAX Water Set: +100 Mana, +15 Mana Regen, +10 Defense, +20 Health"
 }

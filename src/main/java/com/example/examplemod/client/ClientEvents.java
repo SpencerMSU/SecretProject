@@ -1,6 +1,8 @@
 package com.example.examplemod.client;
 
+import com.example.examplemod.client.hud.AccessorySetHudOverlay;
 import com.example.examplemod.client.hud.ManaHudOverlay;
+import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.config.ModConfigEvent;
@@ -11,7 +13,11 @@ public class ClientEvents {
 
     @SubscribeEvent
     public static void onRegisterGuiLayers(RegisterGuiLayersEvent event) {
-        // Using RenderGuiEvent directly in overlay, so nothing to add here for now
+        // Регистрируем HUD для наборов аксессуаров
+        event.registerAboveAll(
+            ResourceLocation.fromNamespaceAndPath("examplemod", "accessory_set_hud"),
+            new AccessorySetHudOverlay()
+        );
     }
 
     @SubscribeEvent
