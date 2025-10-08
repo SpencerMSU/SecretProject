@@ -1,5 +1,6 @@
 package com.example.examplemod.client;
 
+import com.example.examplemod.ExampleMod;
 import com.example.examplemod.client.hud.AccessorySetHudOverlay;
 import com.example.examplemod.client.hud.ManaHudOverlay;
 import net.minecraft.resources.ResourceLocation;
@@ -8,7 +9,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 
-@EventBusSubscriber(value = net.neoforged.api.distmarker.Dist.CLIENT)
+@EventBusSubscriber(modid = ExampleMod.MODID, bus = EventBusSubscriber.Bus.MOD, value = net.neoforged.api.distmarker.Dist.CLIENT)
 public class ClientEvents {
 
     @SubscribeEvent
