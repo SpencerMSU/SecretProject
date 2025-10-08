@@ -2,6 +2,7 @@ package com.example.examplemod.client.hud;
 
 import com.example.examplemod.client.ClientConfig;
 import com.example.examplemod.client.spell.ClientSpellState;
+import com.example.examplemod.spell.SpellEntry;
 import com.example.examplemod.mana.ManaProvider;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -99,18 +100,23 @@ public class ManaHudOverlay {
             int sx = left;
             int sy = top + i * (slotSize + gap);
 
-            // Slot background
-            g.fill(sx - 2, sy - 2, sx + slotSize + 2, sy + slotSize + 2, 0xAA000000);
+            var entry = ClientSpellState.getHotbarEntry(i);
+            
+            // Slot background with rarity-colored border
+            int rarityColor = entry != null ? entry.rarity().getColor() : 0xAA000000;
+            g.fill(sx - 2, sy - 2, sx + slotSize + 2, sy + slotSize + 2, rarityColor);
             g.fill(sx - 1, sy - 1, sx + slotSize + 1, sy + slotSize + 1, 0xFF111827);
 
-            // Active outline
-            int outline = (i == active) ? 0xFF60A5FA : 0xFF374151;
-            g.fill(sx - 2, sy - 2, sx + slotSize + 2, sy - 1, outline);
-            g.fill(sx - 2, sy + slotSize + 1, sx + slotSize + 2, sy + slotSize + 2, outline);
-            g.fill(sx - 2, sy - 2, sx - 1, sy + slotSize + 2, outline);
-            g.fill(sx + slotSize + 1, sy - 2, sx + slotSize + 2, sy + slotSize + 2, outline);
+            // Active outline (brighter glow)
+            if (i == active) {
+                int glowColor = entry != null ? entry.rarity().getColor() | 0xFF000000 : 0xFF60A5FA;
+                // Draw glowing border
+                g.fill(sx - 3, sy - 3, sx + slotSize + 3, sy - 2, glowColor);
+                g.fill(sx - 3, sy + slotSize + 2, sx + slotSize + 3, sy + slotSize + 3, glowColor);
+                g.fill(sx - 3, sy - 3, sx - 2, sy + slotSize + 3, glowColor);
+                g.fill(sx + slotSize + 2, sy - 3, sx + slotSize + 3, sy + slotSize + 3, glowColor);
+            }
 
-            var entry = ClientSpellState.getHotbarEntry(i);
             if (entry != null) {
                 var itemRenderer = mc.getItemRenderer();
                 var pose = g.pose();
@@ -118,6 +124,27 @@ public class ManaHudOverlay {
                 g.renderItem(entry.icon(), sx + 2, sy + 2);
                 pose.popPose();
             }
+        }
+        
+        // Show active spell info
+        var activeEntry = ClientSpellState.getHotbarEntry(active);
+        if (activeEntry != null) {
+            int infoX = left - 5;
+            int infoY = top + active * (slotSize + gap);
+            
+            // Spell name
+            String name = activeEntry.displayName().getString();
+            int nameWidth = mc.font.width(name);
+            g.drawString(mc.font, name, infoX - nameWidth, infoY, activeEntry.rarity().getColor(), true);
+            
+            // Damage and mana below
+            String damageStr = "⚔" + activeEntry.damage();
+            String manaStr = "✦" + activeEntry.manaCost();
+            int dmgWidth = mc.font.width(damageStr);
+            int manaWidth = mc.font.width(manaStr);
+            
+            g.drawString(mc.font, damageStr, infoX - dmgWidth, infoY + 10, 0xFFFF5555, true);
+            g.drawString(mc.font, manaStr, infoX - manaWidth, infoY + 19, 0xFF5555FF, true);
         }
     }
 }
