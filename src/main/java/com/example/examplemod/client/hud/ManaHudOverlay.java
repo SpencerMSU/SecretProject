@@ -91,14 +91,14 @@ public class ManaHudOverlay {
         final int slots = ClientSpellState.getHotbarSize();
         final int slotSize = 20;
         final int gap = 4;
-        final int totalWidth = slots * slotSize + (slots - 1) * gap;
-        final int left = manaBarX + (manaBarWidth - totalWidth) / 2;
+        // Center horizontally relative to mana bar
+        final int left = manaBarX + (manaBarWidth - slotSize) / 2;
 
         int active = ClientSpellState.getActiveIndex();
 
         for (int i = 0; i < slots; i++) {
-            int sx = left + i * (slotSize + gap);
-            int sy = top;
+            int sx = left;
+            int sy = top + i * (slotSize + gap);
 
             var entry = ClientSpellState.getHotbarEntry(i);
             
@@ -126,26 +126,22 @@ public class ManaHudOverlay {
             }
         }
         
-        // Show active spell info below the hotbar
+        // Show active spell info to the right of the active slot
         var activeEntry = ClientSpellState.getHotbarEntry(active);
         if (activeEntry != null) {
-            int infoX = left + active * (slotSize + gap) + slotSize / 2;
-            int infoY = top + slotSize + 5;
+            int infoX = left + slotSize + 8;
+            int infoY = top + active * (slotSize + gap);
             
             // Spell name
             String name = activeEntry.displayName().getString();
-            int nameWidth = mc.font.width(name);
-            g.drawString(mc.font, name, infoX - nameWidth / 2, infoY, activeEntry.rarity().getColor(), true);
+            g.drawString(mc.font, name, infoX, infoY, activeEntry.rarity().getColor(), true);
             
-            // Damage and mana side by side below name
+            // Damage and mana stacked vertically
             String damageStr = "⚔" + activeEntry.damage();
             String manaStr = "✦" + activeEntry.manaCost();
-            int dmgWidth = mc.font.width(damageStr);
-            int manaWidth = mc.font.width(manaStr);
-            int totalInfoWidth = dmgWidth + 10 + manaWidth;
             
-            g.drawString(mc.font, damageStr, infoX - totalInfoWidth / 2, infoY + 10, 0xFFFF5555, true);
-            g.drawString(mc.font, manaStr, infoX - totalInfoWidth / 2 + dmgWidth + 10, infoY + 10, 0xFF5555FF, true);
+            g.drawString(mc.font, damageStr, infoX, infoY + 10, 0xFFFF5555, true);
+            g.drawString(mc.font, manaStr, infoX, infoY + 20, 0xFF5555FF, true);
         }
     }
 }
