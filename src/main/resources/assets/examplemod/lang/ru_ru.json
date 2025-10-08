@@ -1,0 +1,26 @@
+{
+  "_comment": "Камень заточки",
+  "item.examplemod.enchantment_stone": "Камень заточки",
+  
+  "_comment": "Огненные аксессуары",
+  "item.examplemod.fire_ring": "Огненное кольцо",
+  "item.examplemod.fire_necklace": "Огненное ожерелье",
+  "item.examplemod.fire_bracelet": "Огненный браслет",
+  "item.examplemod.fire_belt": "Огненный пояс",
+  "item.examplemod.fire_charm": "Огненный амулет",
+  "item.examplemod.fire_cloak": "Огненный плащ",
+  
+  "_comment": "Водные аксессуары",
+  "item.examplemod.water_ring": "Водное кольцо",
+  "item.examplemod.water_necklace": "Водное ожерелье",
+  "item.examplemod.water_bracelet": "Водный браслет",
+  "item.examplemod.water_belt": "Водный пояс",
+  "item.examplemod.water_charm": "Водный амулет",
+  "item.examplemod.water_cloak": "Водный плащ",
+  
+  "_comment": "Бонусы от наборов",
+  "accessory.examplemod.set_bonus.fire": "Бонус огненного набора: +5 Сила стихии, +3 Урон",
+  "accessory.examplemod.set_bonus.water": "Бонус водного набора: +30 Мана, +5 Реген маны, +5 Защита",
+  "accessory.examplemod.max_set_bonus.fire": "МАКС огненный набор: +15 Сила стихии, +10 Урон, +50 Мана",
+  "accessory.examplemod.max_set_bonus.water": "МАКС водный набор: +100 Мана, +15 Реген маны, +10 Защита, +20 Здоровье"
+}
