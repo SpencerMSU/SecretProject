@@ -42,130 +42,130 @@ public final class ClientSpellState {
             // COMMON (2 spells)
             FIRE_SPELLS.add(new SpellEntry(
                 "spark", 
-                Component.literal("Spark"),
+                Component.translatable("spell.examplemod.spark"),
                 new ItemStack(Items.FLINT_AND_STEEL),
                 SpellRarity.COMMON,
                 8,
                 15,
                 new VisualEffect("flame", 0xFFFF9933, 0xFFFFCC66, "single", "block.fire.ambient", 0.8f, 5),
-                Component.literal("A tiny spark that ignites enemies")
+                Component.translatable("spell.examplemod.spark.desc")
             ));
             
             FIRE_SPELLS.add(new SpellEntry(
                 "ember", 
-                Component.literal("Ember"),
+                Component.translatable("spell.examplemod.ember"),
                 new ItemStack(Items.TORCH),
                 SpellRarity.COMMON,
                 12,
                 20,
                 new VisualEffect("flame", 0xFFFF6600, 0xFFFF8833, "float", "block.campfire.crackle", 1.0f, 8),
-                Component.literal("Floating embers that gently burn foes")
+                Component.translatable("spell.examplemod.ember.desc")
             ));
             
             // UNCOMMON (2 spells)
             FIRE_SPELLS.add(new SpellEntry(
                 "fire_bolt", 
-                Component.literal("Fire Bolt"),
+                Component.translatable("spell.examplemod.fire_bolt"),
                 new ItemStack(Items.BLAZE_POWDER),
                 SpellRarity.UNCOMMON,
                 25,
                 35,
                 new VisualEffect("flame", 0xFFFF3300, 0xFFFFAA00, "projectile", "entity.blaze.shoot", 1.2f, 15),
-                Component.literal("A bolt of concentrated fire")
+                Component.translatable("spell.examplemod.fire_bolt.desc")
             ));
             
             FIRE_SPELLS.add(new SpellEntry(
                 "flame_burst", 
-                Component.literal("Flame Burst"),
+                Component.translatable("spell.examplemod.flame_burst"),
                 new ItemStack(Items.FIRE_CHARGE),
                 SpellRarity.UNCOMMON,
                 30,
                 40,
                 new VisualEffect("flame", 0xFFFF4400, 0xFFFFDD00, "burst", "entity.generic.explode", 1.5f, 25),
-                Component.literal("Explosive burst of flames in all directions")
+                Component.translatable("spell.examplemod.flame_burst.desc")
             ));
             
             // RARE (2 spells)
             FIRE_SPELLS.add(new SpellEntry(
                 "magma_spike", 
-                Component.literal("Magma Spike"),
+                Component.translatable("spell.examplemod.magma_spike"),
                 new ItemStack(Items.MAGMA_BLOCK),
                 SpellRarity.RARE,
                 55,
                 60,
                 new VisualEffect("lava", 0xFFFF2200, 0xFFDD4400, "spike", "block.lava.pop", 2.0f, 35),
-                Component.literal("Molten earth erupts as deadly spikes")
+                Component.translatable("spell.examplemod.magma_spike.desc")
             ));
             
             FIRE_SPELLS.add(new SpellEntry(
                 "blaze_rush", 
-                Component.literal("Blaze Rush"),
+                Component.translatable("spell.examplemod.blaze_rush"),
                 new ItemStack(Items.BLAZE_ROD),
                 SpellRarity.RARE,
                 60,
                 70,
                 new VisualEffect("flame", 0xFFFFAA00, 0xFFFFEE55, "vortex", "entity.blaze.ambient", 1.8f, 50),
-                Component.literal("Channel the fury of a blaze in a spinning vortex")
+                Component.translatable("spell.examplemod.blaze_rush.desc")
             ));
             
             // EPIC (2 spells)
             FIRE_SPELLS.add(new SpellEntry(
                 "inferno", 
-                Component.literal("Inferno"),
+                Component.translatable("spell.examplemod.inferno"),
                 new ItemStack(Items.LAVA_BUCKET),
                 SpellRarity.EPIC,
                 95,
                 100,
                 new VisualEffect("lava+flame", 0xFFFF0000, 0xFFFFAA00, "pillar", "block.lava.extinguish", 2.5f, 80),
-                Component.literal("Summon a towering pillar of pure inferno")
+                Component.translatable("spell.examplemod.inferno.desc")
             ));
             
             FIRE_SPELLS.add(new SpellEntry(
                 "hellfire", 
-                Component.literal("Hellfire"),
+                Component.translatable("spell.examplemod.hellfire"),
                 new ItemStack(Items.NETHERRACK),
                 SpellRarity.EPIC,
                 100,
                 110,
                 new VisualEffect("soul_flame", 0xFF3344FF, 0xFFFF4400, "rain", "entity.wither.shoot", 2.2f, 100),
-                Component.literal("Unleash cursed flames from the nether itself")
+                Component.translatable("spell.examplemod.hellfire.desc")
             ));
             
             // LEGENDARY (1 spell)
             FIRE_SPELLS.add(new SpellEntry(
                 "phoenix_rebirth", 
-                Component.literal("Phoenix Rebirth"),
+                Component.translatable("spell.examplemod.phoenix_rebirth"),
                 new ItemStack(Items.BLAZE_POWDER),
                 SpellRarity.LEGENDARY,
                 150,
                 150,
                 new VisualEffect("flame", 0xFFFFDD00, 0xFFFF2200, "phoenix_wings", "entity.ender_dragon.flap", 3.0f, 150),
-                Component.literal("Rise like a phoenix, wings of flame engulf all")
+                Component.translatable("spell.examplemod.phoenix_rebirth.desc")
             ));
             
             // MYTHIC (1 spell)
             FIRE_SPELLS.add(new SpellEntry(
                 "solar_eclipse", 
-                Component.literal("Solar Eclipse"),
+                Component.translatable("spell.examplemod.solar_eclipse"),
                 new ItemStack(Items.NETHER_STAR),
                 SpellRarity.MYTHIC,
                 250,
                 200,
                 new VisualEffect("solar_flare", 0xFFFFFFFF, 0xFFFF0000, "supernova", "entity.wither.death", 4.0f, 300),
-                Component.literal("Harness the power of a dying star - ultimate destruction")
+                Component.translatable("spell.examplemod.solar_eclipse.desc")
             ));
         }
         if (WATER_SPELLS.isEmpty()) {
-            WATER_SPELLS.add(new SpellEntry("water_1", Component.literal("Water Jet"), new ItemStack(Items.WATER_BUCKET)));
-            WATER_SPELLS.add(new SpellEntry("water_2", Component.literal("Ice Shard"), new ItemStack(Items.ICE)));
-            WATER_SPELLS.add(new SpellEntry("water_3", Component.literal("Tide"), new ItemStack(Items.BLUE_DYE)));
-            WATER_SPELLS.add(new SpellEntry("water_4", Component.literal("Prism Beam"), new ItemStack(Items.PRISMARINE)));
-            WATER_SPELLS.add(new SpellEntry("water_5", Component.literal("Trident Call"), new ItemStack(Items.TRIDENT)));
-            WATER_SPELLS.add(new SpellEntry("water_6", Component.literal("Sea Heart"), new ItemStack(Items.HEART_OF_THE_SEA)));
-            WATER_SPELLS.add(new SpellEntry("water_7", Component.literal("Turtle Shield"), new ItemStack(Items.TURTLE_HELMET)));
-            WATER_SPELLS.add(new SpellEntry("water_8", Component.literal("Soak"), new ItemStack(Items.SPONGE)));
-            WATER_SPELLS.add(new SpellEntry("water_9", Component.literal("Kelp Lash"), new ItemStack(Items.KELP)));
-            WATER_SPELLS.add(new SpellEntry("water_10", Component.literal("Hook"), new ItemStack(Items.FISHING_ROD)));
+            WATER_SPELLS.add(new SpellEntry("water_1", Component.translatable("spell.examplemod.water_1"), new ItemStack(Items.WATER_BUCKET)));
+            WATER_SPELLS.add(new SpellEntry("water_2", Component.translatable("spell.examplemod.water_2"), new ItemStack(Items.ICE)));
+            WATER_SPELLS.add(new SpellEntry("water_3", Component.translatable("spell.examplemod.water_3"), new ItemStack(Items.BLUE_DYE)));
+            WATER_SPELLS.add(new SpellEntry("water_4", Component.translatable("spell.examplemod.water_4"), new ItemStack(Items.PRISMARINE)));
+            WATER_SPELLS.add(new SpellEntry("water_5", Component.translatable("spell.examplemod.water_5"), new ItemStack(Items.TRIDENT)));
+            WATER_SPELLS.add(new SpellEntry("water_6", Component.translatable("spell.examplemod.water_6"), new ItemStack(Items.HEART_OF_THE_SEA)));
+            WATER_SPELLS.add(new SpellEntry("water_7", Component.translatable("spell.examplemod.water_7"), new ItemStack(Items.TURTLE_HELMET)));
+            WATER_SPELLS.add(new SpellEntry("water_8", Component.translatable("spell.examplemod.water_8"), new ItemStack(Items.SPONGE)));
+            WATER_SPELLS.add(new SpellEntry("water_9", Component.translatable("spell.examplemod.water_9"), new ItemStack(Items.KELP)));
+            WATER_SPELLS.add(new SpellEntry("water_10", Component.translatable("spell.examplemod.water_10"), new ItemStack(Items.FISHING_ROD)));
         }
     }
 

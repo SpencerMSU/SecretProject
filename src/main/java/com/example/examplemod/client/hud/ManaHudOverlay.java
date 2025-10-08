@@ -71,8 +71,8 @@ public class ManaHudOverlay {
         int tw = mc.font.width(text);
         g.drawString(mc.font, text, x - 6 - tw, y + barHeight - 8, 0xB3FFFFFF, true);
 
-        // Render spell hotbar aligned to the mana bar (vertical 5 slots)
-        renderSpellHotbar(g, x - 30, y, barHeight);
+        // Render spell hotbar below the mana bar (horizontal 5 slots)
+        renderSpellHotbar(g, x, y + barHeight + 10, barWidth);
     }
 
     private static void fill(GuiGraphics g, int x, int y, int w, int h, int color) {
@@ -84,21 +84,21 @@ public class ManaHudOverlay {
         g.fillGradient(x, y, x + w, y + h, topColor, bottomColor);
     }
 
-    private static void renderSpellHotbar(GuiGraphics g, int left, int manaBarTop, int manaBarHeight) {
+    private static void renderSpellHotbar(GuiGraphics g, int manaBarX, int top, int manaBarWidth) {
         Minecraft mc = Minecraft.getInstance();
         ClientSpellState.ensureInitialized();
 
         final int slots = ClientSpellState.getHotbarSize();
         final int slotSize = 20;
         final int gap = 4;
-        final int totalHeight = slots * slotSize + (slots - 1) * gap;
-        final int top = manaBarTop + (manaBarHeight - totalHeight) / 2;
+        final int totalWidth = slots * slotSize + (slots - 1) * gap;
+        final int left = manaBarX + (manaBarWidth - totalWidth) / 2;
 
         int active = ClientSpellState.getActiveIndex();
 
         for (int i = 0; i < slots; i++) {
-            int sx = left;
-            int sy = top + i * (slotSize + gap);
+            int sx = left + i * (slotSize + gap);
+            int sy = top;
 
             var entry = ClientSpellState.getHotbarEntry(i);
             
@@ -126,25 +126,26 @@ public class ManaHudOverlay {
             }
         }
         
-        // Show active spell info
+        // Show active spell info below the hotbar
         var activeEntry = ClientSpellState.getHotbarEntry(active);
         if (activeEntry != null) {
-            int infoX = left - 5;
-            int infoY = top + active * (slotSize + gap);
+            int infoX = left + active * (slotSize + gap) + slotSize / 2;
+            int infoY = top + slotSize + 5;
             
             // Spell name
             String name = activeEntry.displayName().getString();
             int nameWidth = mc.font.width(name);
-            g.drawString(mc.font, name, infoX - nameWidth, infoY, activeEntry.rarity().getColor(), true);
+            g.drawString(mc.font, name, infoX - nameWidth / 2, infoY, activeEntry.rarity().getColor(), true);
             
-            // Damage and mana below
+            // Damage and mana side by side below name
             String damageStr = "⚔" + activeEntry.damage();
             String manaStr = "✦" + activeEntry.manaCost();
             int dmgWidth = mc.font.width(damageStr);
             int manaWidth = mc.font.width(manaStr);
+            int totalInfoWidth = dmgWidth + 10 + manaWidth;
             
-            g.drawString(mc.font, damageStr, infoX - dmgWidth, infoY + 10, 0xFFFF5555, true);
-            g.drawString(mc.font, manaStr, infoX - manaWidth, infoY + 19, 0xFF5555FF, true);
+            g.drawString(mc.font, damageStr, infoX - totalInfoWidth / 2, infoY + 10, 0xFFFF5555, true);
+            g.drawString(mc.font, manaStr, infoX - totalInfoWidth / 2 + dmgWidth + 10, infoY + 10, 0xFF5555FF, true);
         }
     }
 }

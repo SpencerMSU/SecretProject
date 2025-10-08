@@ -25,21 +25,22 @@ public class SpellBookScreen extends Screen {
     private Button tabWater;
 
     public SpellBookScreen() {
-        super(Component.literal("Spell Book"));
+        super(Component.translatable("screen.examplemod.spell_book"));
     }
 
     @Override
     protected void init() {
         ClientSpellState.ensureInitialized();
 
+        int btnWidth = Math.min(80, (width - PADDING * 3) / 2);
         int left = PADDING;
         int top = PADDING;
-        tabFire = Button.builder(Component.literal("Fire"), b -> {
+        tabFire = Button.builder(Component.translatable("screen.examplemod.spell_book.tab.fire"), b -> {
             ClientSpellState.setSelectedClass(SpellClass.FIRE);
-        }).bounds(left, top, 60, 20).build();
-        tabWater = Button.builder(Component.literal("Water"), b -> {
+        }).bounds(left, top, btnWidth, 20).build();
+        tabWater = Button.builder(Component.translatable("screen.examplemod.spell_book.tab.water"), b -> {
             ClientSpellState.setSelectedClass(SpellClass.WATER);
-        }).bounds(left + 64, top, 60, 20).build();
+        }).bounds(left + btnWidth + 4, top, btnWidth, 20).build();
         addRenderableWidget(tabFire);
         addRenderableWidget(tabWater);
     }
@@ -56,20 +57,25 @@ public class SpellBookScreen extends Screen {
 
         int w = this.width;
         int h = this.height;
+        
+        // Responsive panel sizing based on window size
+        int panelPadding = Math.max(5, Math.min(10, w / 80));
         int midX = w / 2;
 
         // Title
         g.drawString(this.font, this.title, PADDING, PADDING - 10, 0xFFFFFF);
 
-        // Left panel: spells of selected class
-        int panelPadding = 10;
+        // Left panel: spells of selected class (wider on larger screens)
         int leftPanelLeft = PADDING;
         int leftPanelTop = PADDING + 28;
         int leftPanelRight = midX - panelPadding;
         int leftPanelBottom = h - PADDING;
 
         fillPanel(g, leftPanelLeft, leftPanelTop, leftPanelRight, leftPanelBottom);
-        drawClassSpells(g, leftPanelLeft + 8, leftPanelTop + 8, leftPanelRight - leftPanelLeft - 16, leftPanelBottom - leftPanelTop - 16);
+        int innerPadding = Math.max(4, Math.min(8, w / 100));
+        drawClassSpells(g, leftPanelLeft + innerPadding, leftPanelTop + innerPadding, 
+                       leftPanelRight - leftPanelLeft - innerPadding * 2, 
+                       leftPanelBottom - leftPanelTop - innerPadding * 2);
 
         // Right panel: active hotbar slots vertically
         int rightPanelLeft = midX + panelPadding;
@@ -77,7 +83,9 @@ public class SpellBookScreen extends Screen {
         int rightPanelRight = w - PADDING;
         int rightPanelBottom = leftPanelBottom;
         fillPanel(g, rightPanelLeft, rightPanelTop, rightPanelRight, rightPanelBottom);
-        drawHotbarSlots(g, rightPanelLeft + 8, rightPanelTop + 8, rightPanelRight - rightPanelLeft - 16, rightPanelBottom - rightPanelTop - 16);
+        drawHotbarSlots(g, rightPanelLeft + innerPadding, rightPanelTop + innerPadding, 
+                       rightPanelRight - rightPanelLeft - innerPadding * 2, 
+                       rightPanelBottom - rightPanelTop - innerPadding * 2);
 
         // Tooltip for dragging
         if (dragging != null) {
@@ -101,13 +109,18 @@ public class SpellBookScreen extends Screen {
         lines.add(nameWithRarity);
         
         // Rarity
-        lines.add(Component.literal("Rarity: " + spell.rarity().getDisplayName())
+        lines.add(Component.translatable("screen.examplemod.spell_book.rarity")
+            .append(": " + spell.rarity().getDisplayName())
             .withStyle(style -> style.withColor(0xFFAAAAAA)));
         
         // Damage and Mana
-        lines.add(Component.literal("⚔ Damage: " + spell.damage())
+        lines.add(Component.literal("⚔ ")
+            .append(Component.translatable("screen.examplemod.spell_book.damage"))
+            .append(": " + spell.damage())
             .withStyle(style -> style.withColor(0xFFFF5555)));
-        lines.add(Component.literal("✦ Mana Cost: " + spell.manaCost())
+        lines.add(Component.literal("✦ ")
+            .append(Component.translatable("screen.examplemod.spell_book.mana_cost"))
+            .append(": " + spell.manaCost())
             .withStyle(style -> style.withColor(0xFF5555FF)));
         
         // Description
@@ -116,7 +129,8 @@ public class SpellBookScreen extends Screen {
         
         // Visual effect info
         lines.add(Component.literal(""));
-        lines.add(Component.literal("Visual: " + spell.visualEffect().getAnimation())
+        lines.add(Component.translatable("screen.examplemod.spell_book.visual")
+            .append(": " + spell.visualEffect().getAnimation())
             .withStyle(style -> style.withColor(0xFF55FFFF)));
         
         // Convert to FormattedCharSequence
@@ -138,13 +152,18 @@ public class SpellBookScreen extends Screen {
     private void drawClassSpells(GuiGraphics g, int left, int top, int width, int height) {
         List<SpellEntry> list = ClientSpellState.getSpellsForSelectedClass();
 
-        int cols = Math.max(1, width / (SLOT_SIZE + SLOT_GAP));
+        // Responsive column count based on available width
+        int cols = Math.max(2, Math.min(8, width / (SLOT_SIZE + SLOT_GAP)));
         for (int i = 0; i < list.size(); i++) {
             int col = i % cols;
             int row = i / cols;
             int sx = left + col * (SLOT_SIZE + SLOT_GAP);
             int sy = top + row * (SLOT_SIZE + SLOT_GAP);
-            drawSlot(g, sx, sy, list.get(i));
+            
+            // Only draw if within visible area
+            if (sy + SLOT_SIZE <= top + height) {
+                drawSlot(g, sx, sy, list.get(i));
+            }
         }
     }
 
@@ -200,15 +219,17 @@ public class SpellBookScreen extends Screen {
     private SpellEntry getEntryUnderMouse(int mouseX, int mouseY) {
         int w = this.width;
         int h = this.height;
+        int panelPadding = Math.max(5, Math.min(10, w / 80));
         int midX = w / 2;
         int leftPanelLeft = PADDING;
         int leftPanelTop = PADDING + 28;
-        int leftPanelRight = midX - 10;
+        int leftPanelRight = midX - panelPadding;
         int leftPanelBottom = h - PADDING;
-        int left = leftPanelLeft + 8;
-        int top = leftPanelTop + 8;
-        int width = leftPanelRight - leftPanelLeft - 16;
-        int cols = Math.max(1, width / (SLOT_SIZE + SLOT_GAP));
+        int innerPadding = Math.max(4, Math.min(8, w / 100));
+        int left = leftPanelLeft + innerPadding;
+        int top = leftPanelTop + innerPadding;
+        int width = leftPanelRight - leftPanelLeft - innerPadding * 2;
+        int cols = Math.max(2, Math.min(8, width / (SLOT_SIZE + SLOT_GAP)));
         List<SpellEntry> list = ClientSpellState.getSpellsForSelectedClass();
         for (int i = 0; i < list.size(); i++) {
             int col = i % cols;
@@ -225,15 +246,17 @@ public class SpellBookScreen extends Screen {
     private int getHotbarSlotUnderMouse(int mouseX, int mouseY) {
         int w = this.width;
         int h = this.height;
+        int panelPadding = Math.max(5, Math.min(10, w / 80));
         int midX = w / 2;
-        int rightPanelLeft = midX + 10;
+        int rightPanelLeft = midX + panelPadding;
         int rightPanelTop = PADDING + 28;
         int rightPanelRight = w - PADDING;
         int rightPanelBottom = h - PADDING;
-        int left = rightPanelLeft + 8;
-        int top = rightPanelTop + 8;
-        int width = rightPanelRight - rightPanelLeft - 16;
-        int height = rightPanelBottom - rightPanelTop - 16;
+        int innerPadding = Math.max(4, Math.min(8, w / 100));
+        int left = rightPanelLeft + innerPadding;
+        int top = rightPanelTop + innerPadding;
+        int width = rightPanelRight - rightPanelLeft - innerPadding * 2;
+        int height = rightPanelBottom - rightPanelTop - innerPadding * 2;
 
         int slots = ClientSpellState.getHotbarSize();
         int totalHeight = slots * SLOT_SIZE + (slots - 1) * SLOT_GAP;
