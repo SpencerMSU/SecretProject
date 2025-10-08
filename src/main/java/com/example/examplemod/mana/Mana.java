@@ -10,7 +10,7 @@ public class Mana implements IMana {
     public Mana() {
         this.maxMana = 100;
         this.currentMana = this.maxMana;
-        this.regenPerSecond = 5;
+        this.regenPerSecond = 1;
     }
 
     @Override
