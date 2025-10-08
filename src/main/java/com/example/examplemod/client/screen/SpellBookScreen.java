@@ -10,6 +10,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.neoforged.api.distmarker.OnlyIn;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @OnlyIn(net.neoforged.api.distmarker.Dist.CLIENT)
@@ -82,6 +83,48 @@ public class SpellBookScreen extends Screen {
         if (dragging != null) {
             g.renderItem(dragging.icon(), mouseX - 8, mouseY - 8);
         }
+        
+        // Render spell tooltip on hover
+        SpellEntry hovered = getEntryUnderMouse(mouseX, mouseY);
+        if (hovered != null && dragging == null) {
+            renderSpellTooltip(g, hovered, mouseX, mouseY);
+        }
+    }
+    
+    private void renderSpellTooltip(GuiGraphics g, SpellEntry spell, int mouseX, int mouseY) {
+        List<Component> lines = new ArrayList<>();
+        
+        // Spell name with rarity color
+        Component nameWithRarity = Component.literal("")
+            .append(Component.literal(spell.displayName().getString()).withStyle(style -> 
+                style.withColor(spell.rarity().getColor())));
+        lines.add(nameWithRarity);
+        
+        // Rarity
+        lines.add(Component.literal("Rarity: " + spell.rarity().getDisplayName())
+            .withStyle(style -> style.withColor(0xFFAAAAAA)));
+        
+        // Damage and Mana
+        lines.add(Component.literal("⚔ Damage: " + spell.damage())
+            .withStyle(style -> style.withColor(0xFFFF5555)));
+        lines.add(Component.literal("✦ Mana Cost: " + spell.manaCost())
+            .withStyle(style -> style.withColor(0xFF5555FF)));
+        
+        // Description
+        lines.add(Component.literal(""));
+        lines.add(spell.description().copy().withStyle(style -> style.withColor(0xFFDDDDDD)));
+        
+        // Visual effect info
+        lines.add(Component.literal(""));
+        lines.add(Component.literal("Visual: " + spell.visualEffect().getAnimation())
+            .withStyle(style -> style.withColor(0xFF55FFFF)));
+        
+        // Convert to FormattedCharSequence
+        g.renderTooltip(this.font, 
+            lines.stream()
+                .map(c -> c.getVisualOrderText())
+                .toList(), 
+            mouseX, mouseY);
     }
 
     private void fillPanel(GuiGraphics g, int left, int top, int right, int bottom) {
@@ -116,7 +159,9 @@ public class SpellBookScreen extends Screen {
     }
 
     private void drawSlot(GuiGraphics g, int x, int y, SpellEntry entry) {
-        g.fill(x - 2, y - 2, x + SLOT_SIZE + 2, y + SLOT_SIZE + 2, 0xAA000000);
+        // Draw slot with rarity-colored border
+        int borderColor = entry != null ? entry.rarity().getColor() : 0xAA000000;
+        g.fill(x - 2, y - 2, x + SLOT_SIZE + 2, y + SLOT_SIZE + 2, borderColor);
         g.fill(x - 1, y - 1, x + SLOT_SIZE + 1, y + SLOT_SIZE + 1, 0xFF1F2937);
         if (entry != null) {
             g.renderItem(entry.icon(), x + 2, y + 2);
