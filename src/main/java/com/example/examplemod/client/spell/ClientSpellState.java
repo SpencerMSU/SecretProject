@@ -33,7 +33,7 @@ public final class ClientSpellState {
         initialized = true;
 
         seedClassSpells();
-        seedHotbarWithRandomEntries();
+        // Do not prefill hotbar by default; start with empty slots
     }
 
     private static void seedClassSpells() {
@@ -169,15 +169,7 @@ public final class ClientSpellState {
         }
     }
 
-    private static void seedHotbarWithRandomEntries() {
-        List<SpellEntry> pool = new ArrayList<>();
-        pool.addAll(FIRE_SPELLS);
-        pool.addAll(WATER_SPELLS);
-        Collections.shuffle(pool, new Random());
-        for (int i = 0; i < HOTBAR_SLOTS; i++) {
-            HOTBAR[i] = pool.get(i % pool.size());
-        }
-    }
+    // Removed random seeding of hotbar; slots remain null until user assigns
 
     public static List<SpellEntry> getSpellsForSelectedClass() {
         ensureInitialized();
