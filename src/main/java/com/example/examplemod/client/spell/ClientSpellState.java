@@ -156,16 +156,121 @@ public final class ClientSpellState {
             ));
         }
         if (WATER_SPELLS.isEmpty()) {
-            WATER_SPELLS.add(new SpellEntry("water_1", Component.translatable("spell.examplemod.water_1"), new ItemStack(Items.WATER_BUCKET)));
-            WATER_SPELLS.add(new SpellEntry("water_2", Component.translatable("spell.examplemod.water_2"), new ItemStack(Items.ICE)));
-            WATER_SPELLS.add(new SpellEntry("water_3", Component.translatable("spell.examplemod.water_3"), new ItemStack(Items.BLUE_DYE)));
-            WATER_SPELLS.add(new SpellEntry("water_4", Component.translatable("spell.examplemod.water_4"), new ItemStack(Items.PRISMARINE)));
-            WATER_SPELLS.add(new SpellEntry("water_5", Component.translatable("spell.examplemod.water_5"), new ItemStack(Items.TRIDENT)));
-            WATER_SPELLS.add(new SpellEntry("water_6", Component.translatable("spell.examplemod.water_6"), new ItemStack(Items.HEART_OF_THE_SEA)));
-            WATER_SPELLS.add(new SpellEntry("water_7", Component.translatable("spell.examplemod.water_7"), new ItemStack(Items.TURTLE_HELMET)));
-            WATER_SPELLS.add(new SpellEntry("water_8", Component.translatable("spell.examplemod.water_8"), new ItemStack(Items.SPONGE)));
-            WATER_SPELLS.add(new SpellEntry("water_9", Component.translatable("spell.examplemod.water_9"), new ItemStack(Items.KELP)));
-            WATER_SPELLS.add(new SpellEntry("water_10", Component.translatable("spell.examplemod.water_10"), new ItemStack(Items.FISHING_ROD)));
+            // COMMON (2 spells)
+            WATER_SPELLS.add(new SpellEntry(
+                "water_splash", 
+                Component.translatable("spell.examplemod.water_splash"),
+                new ItemStack(Items.WATER_BUCKET),
+                SpellRarity.COMMON,
+                7,
+                15,
+                new VisualEffect("water", 0xFF3399FF, 0xFF66CCFF, "splash", "entity.player.splash", 0.8f, 5),
+                Component.translatable("spell.examplemod.water_splash.desc")
+            ));
+            
+            WATER_SPELLS.add(new SpellEntry(
+                "ice_shard", 
+                Component.translatable("spell.examplemod.ice_shard"),
+                new ItemStack(Items.ICE),
+                SpellRarity.COMMON,
+                10,
+                18,
+                new VisualEffect("snowflake", 0xFFCCEEFF, 0xFF99DDFF, "single", "block.glass.break", 0.9f, 8),
+                Component.translatable("spell.examplemod.ice_shard.desc")
+            ));
+            
+            // UNCOMMON (2 spells)
+            WATER_SPELLS.add(new SpellEntry(
+                "aqua_jet", 
+                Component.translatable("spell.examplemod.aqua_jet"),
+                new ItemStack(Items.BLUE_DYE),
+                SpellRarity.UNCOMMON,
+                22,
+                32,
+                new VisualEffect("water", 0xFF0066FF, 0xFF33AAFF, "stream", "entity.player.swim", 1.1f, 15),
+                Component.translatable("spell.examplemod.aqua_jet.desc")
+            ));
+            
+            WATER_SPELLS.add(new SpellEntry(
+                "frost_nova", 
+                Component.translatable("spell.examplemod.frost_nova"),
+                new ItemStack(Items.PACKED_ICE),
+                SpellRarity.UNCOMMON,
+                28,
+                38,
+                new VisualEffect("snowflake", 0xFF99EEFF, 0xFFDDFFFF, "burst", "block.powder_snow.break", 1.4f, 25),
+                Component.translatable("spell.examplemod.frost_nova.desc")
+            ));
+            
+            // RARE (2 spells)
+            WATER_SPELLS.add(new SpellEntry(
+                "tidal_wave", 
+                Component.translatable("spell.examplemod.tidal_wave"),
+                new ItemStack(Items.PRISMARINE),
+                SpellRarity.RARE,
+                50,
+                55,
+                new VisualEffect("water", 0xFF0055DD, 0xFF3388FF, "wave", "entity.player.splash.high_speed", 1.9f, 35),
+                Component.translatable("spell.examplemod.tidal_wave.desc")
+            ));
+            
+            WATER_SPELLS.add(new SpellEntry(
+                "blizzard", 
+                Component.translatable("spell.examplemod.blizzard"),
+                new ItemStack(Items.BLUE_ICE),
+                SpellRarity.RARE,
+                58,
+                65,
+                new VisualEffect("snowflake", 0xFFAAFFFF, 0xFFFFFFFF, "vortex", "entity.snow_golem.hurt", 1.7f, 50),
+                Component.translatable("spell.examplemod.blizzard.desc")
+            ));
+            
+            // EPIC (2 spells)
+            WATER_SPELLS.add(new SpellEntry(
+                "poseidon_wrath", 
+                Component.translatable("spell.examplemod.poseidon_wrath"),
+                new ItemStack(Items.TRIDENT),
+                SpellRarity.EPIC,
+                90,
+                95,
+                new VisualEffect("water+bubble", 0xFF0044BB, 0xFF00AAFF, "trident", "item.trident.thunder", 2.3f, 80),
+                Component.translatable("spell.examplemod.poseidon_wrath.desc")
+            ));
+            
+            WATER_SPELLS.add(new SpellEntry(
+                "glacial_prison", 
+                Component.translatable("spell.examplemod.glacial_prison"),
+                new ItemStack(Items.BLUE_ICE),
+                SpellRarity.EPIC,
+                95,
+                105,
+                new VisualEffect("ice_crystal", 0xFF88DDFF, 0xFFCCFFFF, "cage", "block.glass.place", 2.1f, 100),
+                Component.translatable("spell.examplemod.glacial_prison.desc")
+            ));
+            
+            // LEGENDARY (1 spell)
+            WATER_SPELLS.add(new SpellEntry(
+                "ocean_guardian", 
+                Component.translatable("spell.examplemod.ocean_guardian"),
+                new ItemStack(Items.HEART_OF_THE_SEA),
+                SpellRarity.LEGENDARY,
+                140,
+                145,
+                new VisualEffect("water", 0xFF0088FF, 0xFF00FFFF, "guardian", "entity.elder_guardian.ambient", 2.8f, 150),
+                Component.translatable("spell.examplemod.ocean_guardian.desc")
+            ));
+            
+            // MYTHIC (1 spell)
+            WATER_SPELLS.add(new SpellEntry(
+                "absolute_zero", 
+                Component.translatable("spell.examplemod.absolute_zero"),
+                new ItemStack(Items.NETHER_STAR),
+                SpellRarity.MYTHIC,
+                240,
+                200,
+                new VisualEffect("ice_storm", 0xFFFFFFFF, 0xFF0099FF, "freeze_time", "entity.wither.death", 3.5f, 300),
+                Component.translatable("spell.examplemod.absolute_zero.desc")
+            ));
         }
     }
 
