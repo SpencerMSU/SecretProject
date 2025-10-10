@@ -123,7 +123,7 @@ configurations {
 dependencies {
     // Curios API dependency for accessories
     compileOnly "top.theillusivec4.curios:curios-neoforge:9.5.1+1.21.1:api"
-    runtimeOnly "top.theillusivec4.curios:curios-neoforge:9.5.1+1.21.1"
+    localRuntime "top.theillusivec4.curios:curios-neoforge:9.5.1+1.21.1"
     
     // Example optional mod dependency with JEI
     // The JEI API is declared for compile time use, while the full JEI artifact is used at runtime

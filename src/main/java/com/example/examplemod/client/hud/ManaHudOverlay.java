@@ -89,8 +89,8 @@ public class ManaHudOverlay {
         ClientSpellState.ensureInitialized();
 
         final int slots = ClientSpellState.getHotbarSize();
-        final int slotSize = 20;
-        final int gap = 4;
+        final int slotSize = 15;
+        final int gap = 3;
         // Center horizontally relative to mana bar
         final int left = manaBarX + (manaBarWidth - slotSize) / 2;
 
@@ -121,7 +121,9 @@ public class ManaHudOverlay {
                 var itemRenderer = mc.getItemRenderer();
                 var pose = g.pose();
                 pose.pushPose();
-                g.renderItem(entry.icon(), sx + 2, sy + 2);
+                // Center the icon within the smaller slot
+                int iconOffset = (slotSize - 16) / 2; // Center 16x16 icon in slot
+                g.renderItem(entry.icon(), sx + iconOffset, sy + iconOffset);
                 pose.popPose();
             }
         }

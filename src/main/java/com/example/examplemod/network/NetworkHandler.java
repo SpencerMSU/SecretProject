@@ -16,6 +16,7 @@ public final class NetworkHandler {
         final PayloadRegistrar registrar = event.registrar(ExampleMod.MODID);
         registrar.playToClient(ManaSyncPayload.TYPE, ManaSyncPayload.STREAM_CODEC, NetworkHandler::handleManaSync);
         registrar.playToServer(SpellCastPayload.TYPE, SpellCastPayload.STREAM_CODEC, NetworkHandler::handleSpellCast);
+        registrar.playToClient(PlayerDataSyncPayload.TYPE, PlayerDataSyncPayload.STREAM_CODEC, NetworkHandler::handlePlayerDataSync);
     }
 
     private static void handleManaSync(final ManaSyncPayload payload, final IPayloadContext context) {
@@ -40,6 +41,12 @@ public final class NetworkHandler {
         }
     }
     
+    private static void handlePlayerDataSync(final PlayerDataSyncPayload payload, final IPayloadContext context) {
+        if (context.flow().getReceptionSide() == LogicalSide.CLIENT) {
+            context.enqueueWork(() -> ClientPayloadHandlers.handlePlayerDataSync(payload));
+        }
+    }
+    
     private static int getDamageForSpell(String spellId) {
         // Map spell IDs to their damage values
         return switch (spellId) {
@@ -53,6 +60,8 @@ public final class NetworkHandler {
             case "hellfire" -> 100;
             case "phoenix_rebirth" -> 150;
             case "solar_eclipse" -> 250;
+            case "soul_fire_ritual" -> 180;
+            case "phoenix_necromancy" -> 220;
             case "water_splash" -> 7;
             case "ice_shard" -> 10;
             case "aqua_jet" -> 22;
@@ -68,6 +77,10 @@ public final class NetworkHandler {
     }
 
     public static void sendToPlayer(net.minecraft.server.level.ServerPlayer player, ManaSyncPayload payload) {
+        PacketDistributor.sendToPlayer(player, payload);
+    }
+    
+    public static void sendToPlayer(net.minecraft.server.level.ServerPlayer player, PlayerDataSyncPayload payload) {
         PacketDistributor.sendToPlayer(player, payload);
     }
 

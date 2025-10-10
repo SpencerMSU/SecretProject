@@ -35,6 +35,8 @@ public final class SpellHandler {
                 case "hellfire" -> castHellfire(player, level, damage);
                 case "phoenix_rebirth" -> castPhoenixRebirth(player, level, damage);
                 case "solar_eclipse" -> castSolarEclipse(player, level, damage);
+                case "soul_fire_ritual" -> castSoulFireRitual(player, level, damage);
+                case "phoenix_necromancy" -> castPhoenixNecromancy(player, level, damage);
                 
                 // WATER SPELLS
                 case "water_splash" -> castWaterSplash(player, level, damage);
@@ -43,8 +45,10 @@ public final class SpellHandler {
                 case "frost_nova" -> castFrostNova(player, level, damage);
                 case "tidal_wave" -> castTidalWave(player, level, damage);
                 case "blizzard" -> castBlizzard(player, level, damage);
+                case "crystal_wave" -> castCrystalWave(player, level, damage);
                 case "poseidon_wrath" -> castPoseidonWrath(player, level, damage);
                 case "glacial_prison" -> castGlacialPrison(player, level, damage);
+                case "deep_freeze" -> castDeepFreeze(player, level, damage);
                 case "ocean_guardian" -> castOceanGuardian(player, level, damage);
                 case "absolute_zero" -> castAbsoluteZero(player, level, damage);
             }
@@ -55,7 +59,8 @@ public final class SpellHandler {
         return spellId.equals("spark") || spellId.equals("ember") || spellId.equals("fire_bolt") || 
                spellId.equals("flame_burst") || spellId.equals("magma_spike") || spellId.equals("blaze_rush") ||
                spellId.equals("inferno") || spellId.equals("hellfire") || spellId.equals("phoenix_rebirth") ||
-               spellId.equals("solar_eclipse");
+               spellId.equals("solar_eclipse") || spellId.equals("soul_fire_ritual") || 
+               spellId.equals("phoenix_necromancy");
     }
 
     private static boolean isWaterSpell(String spellId) {
@@ -65,36 +70,50 @@ public final class SpellHandler {
     // ===== FIRE SPELLS =====
     
     private static void castSpark(ServerPlayer player, ServerLevel level, int damage) {
-        damageNearbyEntities(player, level, 3.0, damage, false);
-        spawnParticles(level, player.position(), ParticleTypes.FLAME, 10);
+        // Простое заклинание: поджигает ближайших врагов
+        damageNearbyEntities(player, level, 3.0, damage, true); // Поджигает врагов
+        spawnParticles(level, player.position(), ParticleTypes.FLAME, 15);
         level.playSound(null, player.blockPosition(), SoundEvents.FIRE_AMBIENT, SoundSource.PLAYERS, 0.8f, 1.0f);
     }
 
     private static void castEmber(ServerPlayer player, ServerLevel level, int damage) {
+        // Заклинание с эффектом: поджигает и наносит урон по области
         damageNearbyEntities(player, level, 4.0, damage, true);
-        spawnParticles(level, player.position(), ParticleTypes.FLAME, 15);
+        // Поджигает блоки вокруг игрока
+        setFireToNearbyBlocks(player, level, 3.0);
+        spawnParticles(level, player.position(), ParticleTypes.FLAME, 20);
         level.playSound(null, player.blockPosition(), SoundEvents.CAMPFIRE_CRACKLE, SoundSource.PLAYERS, 1.0f, 1.0f);
     }
 
     private static void castFireBolt(ServerPlayer player, ServerLevel level, int damage) {
+        // Дальнобойное заклинание: летит по прямой и взрывается
         Vec3 lookVec = player.getLookAngle();
-        Vec3 targetPos = player.position().add(lookVec.scale(8));
-        damageInLine(player, level, player.position(), targetPos, 1.5, damage, false);
-        spawnParticlesInLine(level, player.position(), targetPos, ParticleTypes.FLAME, 20);
+        Vec3 targetPos = player.position().add(lookVec.scale(12)); // Увеличиваем дальность
+        damageInLine(player, level, player.position(), targetPos, 1.5, damage, true);
+        // Взрыв в конечной точке
+        damageNearbyEntitiesAtPos(level, targetPos, 3.0, damage / 2, true);
+        spawnParticlesInLine(level, player.position(), targetPos, ParticleTypes.FLAME, 30);
+        spawnParticles(level, targetPos, ParticleTypes.EXPLOSION, 10);
         level.playSound(null, player.blockPosition(), SoundEvents.BLAZE_SHOOT, SoundSource.PLAYERS, 1.2f, 1.0f);
     }
 
     private static void castFlameBurst(ServerPlayer player, ServerLevel level, int damage) {
+        // Мощное заклинание: взрыв с поджогом и отталкиванием
         damageNearbyEntities(player, level, 6.0, damage, true);
-        spawnParticles(level, player.position(), ParticleTypes.FLAME, 50);
-        spawnParticles(level, player.position(), ParticleTypes.LAVA, 20);
+        knockbackNearbyEntitiesNew(player, level, 6.0, 1.5); // Отталкивание
+        spawnParticles(level, player.position(), ParticleTypes.FLAME, 60);
+        spawnParticles(level, player.position(), ParticleTypes.LAVA, 30);
+        spawnParticles(level, player.position(), ParticleTypes.EXPLOSION, 15);
         level.playSound(null, player.blockPosition(), SoundEvents.GENERIC_EXPLODE.value(), SoundSource.PLAYERS, 1.5f, 1.0f);
     }
 
     private static void castMagmaSpike(ServerPlayer player, ServerLevel level, int damage) {
+        // Заклинание с контролем: замедляет и поджигает
         damageNearbyEntities(player, level, 5.0, damage, true);
-        spawnParticles(level, player.position(), ParticleTypes.LAVA, 40);
-        applyEffectToNearbyEntities(player, level, 5.0, new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 60, 1));
+        applyEffectToNearbyEntities(player, level, 5.0, new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 100, 2));
+        applyEffectToNearbyEntities(player, level, 5.0, new MobEffectInstance(MobEffects.WEAKNESS, 60, 1));
+        spawnParticles(level, player.position(), ParticleTypes.LAVA, 50);
+        spawnParticles(level, player.position(), ParticleTypes.FLAME, 30);
         level.playSound(null, player.blockPosition(), SoundEvents.LAVA_POP, SoundSource.PLAYERS, 2.0f, 0.8f);
     }
 
@@ -312,5 +331,163 @@ public final class SpellHandler {
             Vec3 point = start.add(direction.scale(distance * t));
             level.sendParticles(particle, point.x, point.y + 1.0, point.z, 1, 0.1, 0.1, 0.1, 0.05);
         }
+    }
+    
+    // Новые вспомогательные методы для улучшенных заклинаний
+    
+    private static void setFireToNearbyBlocks(ServerPlayer player, ServerLevel level, double radius) {
+        AABB area = new AABB(player.position().subtract(radius, radius, radius), player.position().add(radius, radius, radius));
+        for (int x = (int) area.minX; x <= area.maxX; x++) {
+            for (int y = (int) area.minY; y <= area.maxY; y++) {
+                for (int z = (int) area.minZ; z <= area.maxZ; z++) {
+                    var pos = new net.minecraft.core.BlockPos(x, y, z);
+                    if (level.getBlockState(pos).isAir() && level.random.nextFloat() < 0.3f) {
+                        level.setBlock(pos, net.minecraft.world.level.block.Blocks.FIRE.defaultBlockState(), 3);
+                    }
+                }
+            }
+        }
+    }
+    
+    private static void damageNearbyEntitiesAtPos(ServerLevel level, Vec3 pos, double radius, int damage, boolean setOnFire) {
+        AABB area = new AABB(pos.subtract(radius, radius, radius), pos.add(radius, radius, radius));
+        List<LivingEntity> entities = level.getEntitiesOfClass(LivingEntity.class, area, 
+            entity -> entity.isAlive());
+        
+        for (LivingEntity entity : entities) {
+            entity.hurt(level.damageSources().magic(), damage);
+            if (setOnFire) {
+                entity.setRemainingFireTicks(100); // 5 секунд огня (20 тиков = 1 секунда)
+            }
+        }
+    }
+    
+    private static void knockbackNearbyEntitiesNew(ServerPlayer caster, ServerLevel level, double radius, double strength) {
+        AABB area = new AABB(caster.position().subtract(radius, radius, radius), caster.position().add(radius, radius, radius));
+        List<LivingEntity> entities = level.getEntitiesOfClass(LivingEntity.class, area, 
+            entity -> entity != caster && entity.isAlive());
+        
+        for (LivingEntity entity : entities) {
+            Vec3 direction = entity.position().subtract(caster.position()).normalize();
+            entity.setDeltaMovement(entity.getDeltaMovement().add(direction.scale(strength)));
+        }
+    }
+    
+    // ===== NECROMANCER FIRE SPELLS =====
+    
+    private static void castSoulFireRitual(ServerPlayer player, ServerLevel level, int damage) {
+        // Некромантское заклинание: воскрешает мертвых мобов как союзников
+        AABB area = new AABB(player.position().subtract(8.0, 8.0, 8.0), player.position().add(8.0, 8.0, 8.0));
+        List<LivingEntity> entities = level.getEntitiesOfClass(LivingEntity.class, area, 
+            entity -> entity != player && entity.isAlive());
+        
+        // Наносим урон врагам
+        for (LivingEntity entity : entities) {
+            entity.hurt(level.damageSources().magic(), damage);
+            entity.setRemainingFireTicks(100); // 5 секунд огня
+        }
+        
+        // Воскрешаем мертвых мобов как союзников (имитация)
+        spawnSoulFireMinions(player, level, 3);
+        
+        // Эффекты
+        spawnParticles(level, player.position(), ParticleTypes.SOUL_FIRE_FLAME, 50);
+        spawnParticles(level, player.position(), ParticleTypes.SOUL, 30);
+        level.playSound(null, player.blockPosition(), SoundEvents.WITHER_AMBIENT, SoundSource.PLAYERS, 2.0f, 0.8f);
+    }
+    
+    private static void castPhoenixNecromancy(ServerPlayer player, ServerLevel level, int damage) {
+        // Некромантское заклинание: превращает врагов в огненных зомби
+        AABB area = new AABB(player.position().subtract(10.0, 10.0, 10.0), player.position().add(10.0, 10.0, 10.0));
+        List<LivingEntity> entities = level.getEntitiesOfClass(LivingEntity.class, area, 
+            entity -> entity != player && entity.isAlive());
+        
+        // Наносим урон и превращаем в огненных зомби
+        for (LivingEntity entity : entities) {
+            entity.hurt(level.damageSources().magic(), damage);
+            entity.setRemainingFireTicks(200); // 10 секунд огня
+            // Применяем эффект "нежить" (слабость + замедление)
+            entity.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 300, 2));
+            entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 300, 1));
+        }
+        
+        // Исцеляем игрока за счет некромантии
+        player.heal(damage / 4); // Исцеляем на 25% от урона
+        
+        // Эффекты
+        spawnParticles(level, player.position(), ParticleTypes.SOUL_FIRE_FLAME, 80);
+        spawnParticles(level, player.position(), ParticleTypes.SOUL, 40); // Заменяем PHANTOM на SOUL
+        spawnParticles(level, player.position(), ParticleTypes.FLAME, 60);
+        level.playSound(null, player.blockPosition(), SoundEvents.PHANTOM_AMBIENT, SoundSource.PLAYERS, 2.5f, 1.2f);
+    }
+    
+    private static void spawnSoulFireMinions(ServerPlayer player, ServerLevel level, int count) {
+        // Создаем "духов огня" вокруг игрока (имитация союзников)
+        for (int i = 0; i < count; i++) {
+            double angle = (2 * Math.PI * i) / count;
+            double distance = 3.0;
+            Vec3 pos = player.position().add(
+                Math.cos(angle) * distance,
+                1.0,
+                Math.sin(angle) * distance
+            );
+            
+            // Создаем эффект "духа огня"
+            spawnParticles(level, pos, ParticleTypes.SOUL_FIRE_FLAME, 20);
+            spawnParticles(level, pos, ParticleTypes.SOUL, 10);
+        }
+    }
+    
+    // Crystal Wave - Кристальная волна (RARE)
+    private static void castCrystalWave(ServerPlayer player, ServerLevel level, int damage) {
+        // Создаем волну кристальной энергии в направлении взгляда
+        Vec3 lookDir = player.getLookAngle();
+        Vec3 startPos = player.position().add(0, 1.5, 0);
+        
+        // Волна движется на 8 блоков вперед
+        for (int i = 1; i <= 8; i++) {
+            Vec3 pos = startPos.add(lookDir.scale(i));
+            
+            // Находим врагов в радиусе 2 блоков от каждой точки волны
+            AABB area = new AABB(pos.subtract(2.0, 2.0, 2.0), pos.add(2.0, 2.0, 2.0));
+            List<LivingEntity> entities = level.getEntitiesOfClass(LivingEntity.class, area, 
+                entity -> entity != player && entity.isAlive());
+            
+            for (LivingEntity entity : entities) {
+                entity.hurt(level.damageSources().magic(), damage);
+                // Кристальная энергия замедляет врагов
+                entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 200, 1));
+            }
+            
+            // Эффекты кристальной волны
+            spawnParticles(level, pos, ParticleTypes.END_ROD, 15);
+            spawnParticles(level, pos, ParticleTypes.CRIT, 10);
+        }
+        
+        level.playSound(null, player.blockPosition(), SoundEvents.AMETHYST_BLOCK_BREAK, SoundSource.PLAYERS, 1.5f, 1.2f);
+    }
+    
+    // Deep Freeze - Глубокое замораживание (EPIC)
+    private static void castDeepFreeze(ServerPlayer player, ServerLevel level, int damage) {
+        // Мощный замораживающий взрыв в большом радиусе
+        AABB area = new AABB(player.position().subtract(8.0, 8.0, 8.0), player.position().add(8.0, 8.0, 8.0));
+        List<LivingEntity> entities = level.getEntitiesOfClass(LivingEntity.class, area, 
+            entity -> entity != player && entity.isAlive());
+        
+        for (LivingEntity entity : entities) {
+            entity.hurt(level.damageSources().magic(), damage);
+            // Глубокое замораживание - сильное замедление + слабость
+            entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 400, 3));
+            entity.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 400, 2));
+            entity.addEffect(new MobEffectInstance(MobEffects.DIG_SLOWDOWN, 400, 2));
+        }
+        
+        // Мощные эффекты замораживания
+        spawnParticles(level, player.position(), ParticleTypes.SNOWFLAKE, 100);
+        spawnParticles(level, player.position(), ParticleTypes.ITEM_SNOWBALL, 50);
+        spawnParticles(level, player.position(), ParticleTypes.END_ROD, 30);
+        
+        level.playSound(null, player.blockPosition(), SoundEvents.POWDER_SNOW_BREAK, SoundSource.PLAYERS, 2.0f, 0.8f);
+        level.playSound(null, player.blockPosition(), SoundEvents.GLASS_BREAK, SoundSource.PLAYERS, 1.5f, 0.5f);
     }
 }

@@ -1,27 +1,24 @@
-# eclipse
-bin
-*.launch
-.settings
-.metadata
-.classpath
-.project
+# Gradle
+.gradle/
+build/
+gradle/
+gradlew
+gradlew.bat
 
-# idea
-out
-*.ipr
-*.iws
+# IDE
+.idea/
+.vscode/
 *.iml
-.idea
 
-# gradle
-build
-.gradle
-src/generated
+# OS
+.DS_Store
+Thumbs.db
 
-# other
-eclipse
-run
-runs
-run-data
+# Minecraft
+run/
+logs/
+saves/
 
-repo
+# Temporary files
+*.tmp
+*.temp

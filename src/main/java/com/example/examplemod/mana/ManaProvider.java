@@ -19,9 +19,9 @@ public final class ManaProvider {
             this.player = player;
             // Initialize defaults if missing
             CompoundTag tag = ensureRoot();
-            if (!tag.contains("Max")) tag.putInt("Max", 100);
+            if (!tag.contains("Max")) tag.putInt("Max", 1000);
             if (!tag.contains("Current")) tag.putInt("Current", tag.getInt("Max"));
-            if (!tag.contains("Regen")) tag.putInt("Regen", 5);
+            if (!tag.contains("Regen")) tag.putInt("Regen", 1);
         }
 
         private CompoundTag ensureRoot() {
@@ -58,6 +58,26 @@ public final class ManaProvider {
         @Override
         public void setRegenPerSecond(int value) {
             ensureRoot().putInt("Regen", Math.max(0, value));
+        }
+        
+        @Override
+        public boolean isMaxManaManuallySet() {
+            return ensureRoot().getBoolean("MaxManuallySet");
+        }
+        
+        @Override
+        public void setMaxManaManuallySet(boolean value) {
+            ensureRoot().putBoolean("MaxManuallySet", value);
+        }
+        
+        @Override
+        public boolean isRegenManuallySet() {
+            return ensureRoot().getBoolean("RegenManuallySet");
+        }
+        
+        @Override
+        public void setRegenManuallySet(boolean value) {
+            ensureRoot().putBoolean("RegenManuallySet", value);
         }
     }
 }

@@ -25,6 +25,7 @@ public final class ClientSpellState {
 
     private static int activeIndex = 0; // 0..4
     private static SpellClass selectedClass = SpellClass.FIRE;
+    private static int scrollOffset = 0;
 
     private ClientSpellState() {}
 
@@ -34,6 +35,69 @@ public final class ClientSpellState {
 
         seedClassSpells();
         // Do not prefill hotbar by default; start with empty slots
+    }
+    
+    /**
+     * Загрузить данные игрока из сохранения
+     */
+    public static void loadPlayerData(int scrollOffset, List<String> hotbarSpells, String selectedClass) {
+        ClientSpellState.scrollOffset = scrollOffset;
+        ClientSpellState.selectedClass = SpellClass.valueOf(selectedClass);
+        
+        // Загружаем заклинания в хотбар
+        for (int i = 0; i < Math.min(hotbarSpells.size(), HOTBAR_SLOTS); i++) {
+            String spellId = hotbarSpells.get(i);
+            if (!spellId.isEmpty()) {
+                // Находим заклинание по ID
+                SpellEntry entry = findSpellById(spellId);
+                if (entry != null) {
+                    HOTBAR[i] = entry;
+                }
+            }
+        }
+    }
+    
+    /**
+     * Получить данные для сохранения
+     */
+    public static int getScrollOffset() {
+        return scrollOffset;
+    }
+    
+    public static void setScrollOffset(int scrollOffset) {
+        ClientSpellState.scrollOffset = scrollOffset;
+    }
+    
+    public static List<String> getHotbarSpellIds() {
+        List<String> spellIds = new ArrayList<>();
+        for (SpellEntry entry : HOTBAR) {
+            if (entry != null) {
+                spellIds.add(entry.id());
+            } else {
+                spellIds.add("");
+            }
+        }
+        return spellIds;
+    }
+    
+    public static String getSelectedClassString() {
+        return selectedClass.name();
+    }
+    
+    private static SpellEntry findSpellById(String spellId) {
+        // Ищем в огненных заклинаниях
+        for (SpellEntry entry : FIRE_SPELLS) {
+            if (entry.id().equals(spellId)) {
+                return entry;
+            }
+        }
+        // Ищем в водных заклинаниях
+        for (SpellEntry entry : WATER_SPELLS) {
+            if (entry.id().equals(spellId)) {
+                return entry;
+            }
+        }
+        return null;
     }
 
     private static void seedClassSpells() {
@@ -154,6 +218,29 @@ public final class ClientSpellState {
                 new VisualEffect("solar_flare", 0xFFFFFFFF, 0xFFFF0000, "supernova", "entity.wither.death", 4.0f, 300),
                 Component.translatable("spell.examplemod.solar_eclipse.desc")
             ));
+            
+            // NECROMANCER FIRE (2 spells) - Уникальные некромантские заклинания огня
+            FIRE_SPELLS.add(new SpellEntry(
+                "soul_fire_ritual", 
+                Component.translatable("spell.examplemod.soul_fire_ritual"),
+                new ItemStack(Items.WITHER_SKELETON_SKULL),
+                SpellRarity.NECROMANCER_FIRE,
+                180,
+                120,
+                new VisualEffect("soul_flames", 0xFF8B0000, 0xFF4B0000, "soul_ritual", "entity.wither.ambient", 2.8f, 200),
+                Component.translatable("spell.examplemod.soul_fire_ritual.desc")
+            ));
+            
+            FIRE_SPELLS.add(new SpellEntry(
+                "phoenix_necromancy", 
+                Component.translatable("spell.examplemod.phoenix_necromancy"),
+                new ItemStack(Items.PHANTOM_MEMBRANE),
+                SpellRarity.NECROMANCER_FIRE,
+                220,
+                150,
+                new VisualEffect("undead_flames", 0xFF8B0000, 0xFF2F0000, "phoenix_rise", "entity.phantom.ambient", 3.2f, 250),
+                Component.translatable("spell.examplemod.phoenix_necromancy.desc")
+            ));
         }
         if (WATER_SPELLS.isEmpty()) {
             // COMMON (2 spells)
@@ -225,7 +312,18 @@ public final class ClientSpellState {
                 Component.translatable("spell.examplemod.blizzard.desc")
             ));
             
-            // EPIC (2 spells)
+            WATER_SPELLS.add(new SpellEntry(
+                "crystal_wave", 
+                Component.translatable("spell.examplemod.crystal_wave"),
+                new ItemStack(Items.AMETHYST_SHARD),
+                SpellRarity.RARE,
+                65,
+                70,
+                new VisualEffect("crystal", 0xFF9966FF, 0xFFCC99FF, "crystal_wave", "block.amethyst_block.break", 2.0f, 60),
+                Component.translatable("spell.examplemod.crystal_wave.desc")
+            ));
+            
+            // EPIC (3 spells)
             WATER_SPELLS.add(new SpellEntry(
                 "poseidon_wrath", 
                 Component.translatable("spell.examplemod.poseidon_wrath"),
@@ -246,6 +344,17 @@ public final class ClientSpellState {
                 105,
                 new VisualEffect("ice_crystal", 0xFF88DDFF, 0xFFCCFFFF, "cage", "block.glass.place", 2.1f, 100),
                 Component.translatable("spell.examplemod.glacial_prison.desc")
+            ));
+            
+            WATER_SPELLS.add(new SpellEntry(
+                "deep_freeze", 
+                Component.translatable("spell.examplemod.deep_freeze"),
+                new ItemStack(Items.POWDER_SNOW_BUCKET),
+                SpellRarity.EPIC,
+                110,
+                120,
+                new VisualEffect("ice_storm", 0xFF66CCFF, 0xFFAAFFFF, "freeze_blast", "block.powder_snow.break", 2.5f, 120),
+                Component.translatable("spell.examplemod.deep_freeze.desc")
             ));
             
             // LEGENDARY (1 spell)

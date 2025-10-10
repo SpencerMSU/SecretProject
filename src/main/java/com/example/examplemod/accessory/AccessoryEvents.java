@@ -69,7 +69,7 @@ public class AccessoryEvents {
         // Применяем реген маны (вызывается каждую секунду)
         if (stats.getManaRegen() > 0 && player instanceof net.minecraft.server.level.ServerPlayer sp) {
             IMana mana = ManaApi.get(player);
-            int regenAmount = (int) (stats.getManaRegen() / 20.0); // Делим на 20 т.к. вызывается каждую секунду
+            int regenAmount = (int) stats.getManaRegen(); // Вызывается каждую секунду, поэтому не делим на 20
             mana.addMana(regenAmount);
             ManaApi.sync(sp);
         }
@@ -83,13 +83,15 @@ public class AccessoryEvents {
             int oldMax = mana.getMaxMana();
             float percent = oldMax > 0 ? (float) current / oldMax : 1.0f;
             
-            // Устанавливаем новый максимум (базовый + бонус)
-            int baseMax = 100; // Базовое значение
-            int newMax = baseMax + (int) stats.getMana();
-            mana.setMaxMana(newMax);
-            
-            // Восстанавливаем процент маны
-            mana.setCurrentMana((int) (newMax * percent));
+            // Устанавливаем новый максимум только если он не был установлен вручную
+            if (!mana.isMaxManaManuallySet()) {
+                int baseMax = 1000; // Базовое значение
+                int newMax = baseMax + (int) stats.getMana();
+                mana.setMaxMana(newMax);
+                
+                // Восстанавливаем процент маны
+                mana.setCurrentMana((int) (newMax * percent));
+            }
             
             ManaApi.sync(sp);
         }

@@ -16,10 +16,11 @@ import java.util.List;
 @OnlyIn(net.neoforged.api.distmarker.Dist.CLIENT)
 public class SpellBookScreen extends Screen {
     private static final int PADDING = 8;
-    private static final int SLOT_SIZE = 20;
-    private static final int SLOT_GAP = 4;
+    private static final int SLOT_SIZE = 32; // Увеличиваем размер слотов
+    private static final int SLOT_GAP = 4;   // Увеличиваем промежутки
 
     private SpellEntry dragging;
+    private int scrollOffset = 0;
 
     private Button tabFire;
     private Button tabWater;
@@ -64,6 +65,10 @@ public class SpellBookScreen extends Screen {
 
         // Title
         g.drawString(this.font, this.title, PADDING, PADDING - 10, 0xFFFFFF);
+        
+        // Instructions
+        String instructions = "Держите палочку и нажмите ПКМ для кастования";
+        g.drawString(this.font, instructions, PADDING, PADDING + 10, 0xAAAAAA);
 
         // Left panel: spells of selected class (wider on larger screens)
         int leftPanelLeft = PADDING;
@@ -152,18 +157,33 @@ public class SpellBookScreen extends Screen {
     private void drawClassSpells(GuiGraphics g, int left, int top, int width, int height) {
         List<SpellEntry> list = ClientSpellState.getSpellsForSelectedClass();
 
-        // Responsive column count based on available width
-        int cols = Math.max(2, Math.min(8, width / (SLOT_SIZE + SLOT_GAP)));
-        for (int i = 0; i < list.size(); i++) {
+        // Fixed grid layout: 3 columns, 4 rows (12 slots total)
+        int cols = 3;
+        int maxRows = 4;
+        
+        // Calculate slot size to fill the entire area
+        int availableWidth = width - SLOT_GAP * 2; // Leave some padding
+        int availableHeight = height - SLOT_GAP * 2;
+        
+        int slotWidth = (availableWidth - (cols - 1) * SLOT_GAP) / cols;
+        int slotHeight = (availableHeight - (maxRows - 1) * SLOT_GAP) / maxRows;
+        
+        // Use the smaller dimension to keep slots square
+        int slotSize = Math.min(slotWidth, slotHeight);
+        
+        // Center the grid
+        int gridWidth = cols * slotSize + (cols - 1) * SLOT_GAP;
+        int gridHeight = maxRows * slotSize + (maxRows - 1) * SLOT_GAP;
+        int startX = left + (width - gridWidth) / 2;
+        int startY = top + (height - gridHeight) / 2;
+        
+        for (int i = 0; i < list.size() && i < cols * maxRows; i++) {
             int col = i % cols;
             int row = i / cols;
-            int sx = left + col * (SLOT_SIZE + SLOT_GAP);
-            int sy = top + row * (SLOT_SIZE + SLOT_GAP);
             
-            // Only draw if within visible area
-            if (sy + SLOT_SIZE <= top + height) {
-                drawSlot(g, sx, sy, list.get(i));
-            }
+            int sx = startX + col * (slotSize + SLOT_GAP);
+            int sy = startY + row * (slotSize + SLOT_GAP);
+            drawSlot(g, sx, sy, slotSize, list.get(i));
         }
     }
 
@@ -177,14 +197,44 @@ public class SpellBookScreen extends Screen {
         }
     }
 
-    private void drawSlot(GuiGraphics g, int x, int y, SpellEntry entry) {
+    private void drawSlot(GuiGraphics g, int x, int y, int slotSize, SpellEntry entry) {
         // Draw slot with rarity-colored border
         int borderColor = entry != null ? entry.rarity().getColor() : 0xAA000000;
-        g.fill(x - 2, y - 2, x + SLOT_SIZE + 2, y + SLOT_SIZE + 2, borderColor);
-        g.fill(x - 1, y - 1, x + SLOT_SIZE + 1, y + SLOT_SIZE + 1, 0xFF1F2937);
+        g.fill(x - 2, y - 2, x + slotSize + 2, y + slotSize + 2, borderColor);
+        g.fill(x - 1, y - 1, x + slotSize + 1, y + slotSize + 1, 0xFF1F2937);
+        
         if (entry != null) {
-            g.renderItem(entry.icon(), x + 2, y + 2);
+            // Center the icon within the slot
+            int iconOffset = (slotSize - 16) / 2; // Center 16x16 icon in slot
+            g.renderItem(entry.icon(), x + iconOffset, y + iconOffset);
+            
+            // Draw damage and mana cost as text
+            String damageText = String.valueOf(entry.damage());
+            String manaText = String.valueOf(entry.manaCost());
+            
+            // Damage (red) in bottom-left
+            g.drawString(this.font, damageText, x + 2, y + slotSize - 10, 0xFFFF5555);
+            
+            // Mana cost (blue) in bottom-right
+            int manaWidth = this.font.width(manaText);
+            g.drawString(this.font, manaText, x + slotSize - manaWidth - 2, y + slotSize - 10, 0xFF5555FF);
+            
+            // Draw spell name at the top (if there's space)
+            if (slotSize >= 24) {
+                String name = entry.displayName().getString();
+                if (name.length() > 8) {
+                    name = name.substring(0, 8) + "...";
+                }
+                int nameWidth = this.font.width(name);
+                int nameX = x + (slotSize - nameWidth) / 2;
+                g.drawString(this.font, name, nameX, y + 1, 0xFFFFFF);
+            }
         }
+    }
+    
+    // Overload for backward compatibility with hotbar slots
+    private void drawSlot(GuiGraphics g, int x, int y, SpellEntry entry) {
+        drawSlot(g, x, y, SLOT_SIZE, entry);
     }
 
     @Override
@@ -204,6 +254,8 @@ public class SpellBookScreen extends Screen {
             int slot = getHotbarSlotUnderMouse((int) mouseX, (int) mouseY);
             if (slot >= 0) {
                 ClientSpellState.setHotbarEntry(slot, dragging);
+                // Сохраняем изменения в хотбаре
+                savePlayerData();
             }
             dragging = null;
             return true;
@@ -229,14 +281,37 @@ public class SpellBookScreen extends Screen {
         int left = leftPanelLeft + innerPadding;
         int top = leftPanelTop + innerPadding;
         int width = leftPanelRight - leftPanelLeft - innerPadding * 2;
-        int cols = Math.max(2, Math.min(8, width / (SLOT_SIZE + SLOT_GAP)));
+        int height = leftPanelBottom - leftPanelTop - innerPadding * 2;
+        
+        // Use same logic as drawClassSpells
+        int cols = 3;
+        int maxRows = 4;
+        
+        // Calculate slot size to fill the entire area
+        int availableWidth = width - SLOT_GAP * 2;
+        int availableHeight = height - SLOT_GAP * 2;
+        
+        int slotWidth = (availableWidth - (cols - 1) * SLOT_GAP) / cols;
+        int slotHeight = (availableHeight - (maxRows - 1) * SLOT_GAP) / maxRows;
+        
+        // Use the smaller dimension to keep slots square
+        int slotSize = Math.min(slotWidth, slotHeight);
+        
+        // Center the grid
+        int gridWidth = cols * slotSize + (cols - 1) * SLOT_GAP;
+        int gridHeight = maxRows * slotSize + (maxRows - 1) * SLOT_GAP;
+        int startX = left + (width - gridWidth) / 2;
+        int startY = top + (height - gridHeight) / 2;
+        
         List<SpellEntry> list = ClientSpellState.getSpellsForSelectedClass();
-        for (int i = 0; i < list.size(); i++) {
+        for (int i = 0; i < list.size() && i < cols * maxRows; i++) {
             int col = i % cols;
             int row = i / cols;
-            int sx = left + col * (SLOT_SIZE + SLOT_GAP);
-            int sy = top + row * (SLOT_SIZE + SLOT_GAP);
-            if (mouseX >= sx && mouseX <= sx + SLOT_SIZE && mouseY >= sy && mouseY <= sy + SLOT_SIZE) {
+            
+            int sx = startX + col * (slotSize + SLOT_GAP);
+            int sy = startY + row * (slotSize + SLOT_GAP);
+            
+            if (mouseX >= sx && mouseX <= sx + slotSize && mouseY >= sy && mouseY <= sy + slotSize) {
                 return list.get(i);
             }
         }
@@ -272,6 +347,29 @@ public class SpellBookScreen extends Screen {
     }
 
     @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double deltaX, double deltaY) {
+        // Handle scrolling in the left panel (spells area)
+        int w = this.width;
+        int h = this.height;
+        int panelPadding = Math.max(5, Math.min(10, w / 80));
+        int midX = w / 2;
+        int leftPanelLeft = PADDING;
+        int leftPanelTop = PADDING + 28;
+        int leftPanelRight = midX - panelPadding;
+        int leftPanelBottom = h - PADDING;
+        
+        if (mouseX >= leftPanelLeft && mouseX <= leftPanelRight && 
+            mouseY >= leftPanelTop && mouseY <= leftPanelBottom) {
+            scrollOffset -= (int) deltaY;
+            // Сохраняем изменения позиции прокрутки
+            savePlayerData();
+            return true;
+        }
+        
+        return super.mouseScrolled(mouseX, mouseY, deltaX, deltaY);
+    }
+
+    @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         // Close with inventory/Escape to match UX expectations
         if (this.minecraft != null && this.minecraft.options.keyInventory.matches(keyCode, scanCode)) {
@@ -279,5 +377,16 @@ public class SpellBookScreen extends Screen {
             return true;
         }
         return super.keyPressed(keyCode, scanCode, modifiers);
+    }
+    
+    /**
+     * Сохранить данные игрока (позиция прокрутки, хотбар, выбранный класс)
+     */
+    private void savePlayerData() {
+        // Обновляем scrollOffset в ClientSpellState
+        ClientSpellState.setScrollOffset(scrollOffset);
+        
+        // Здесь можно добавить отправку данных на сервер для сохранения
+        // Пока что данные сохраняются только локально
     }
 }

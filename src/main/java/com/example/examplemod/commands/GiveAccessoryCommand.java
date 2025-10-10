@@ -33,7 +33,25 @@ public class GiveAccessoryCommand {
                     .then(Commands.literal("charm")
                         .then(registerRarityAndLevel(AccessoryElement.FIRE, AccessoryType.CHARM)))
                     .then(Commands.literal("cloak")
-                        .then(registerRarityAndLevel(AccessoryElement.FIRE, AccessoryType.CLOAK))))
+                        .then(registerRarityAndLevel(AccessoryElement.FIRE, AccessoryType.CLOAK)))
+                    .then(Commands.literal("dragon_ring")
+                        .then(Commands.argument("level", IntegerArgumentType.integer(1, 10))
+                            .executes(ctx -> giveLegendaryAccessory(ctx, "fire_dragon_ring"))))
+                    .then(Commands.literal("volcanic_necklace")
+                        .then(Commands.argument("level", IntegerArgumentType.integer(1, 10))
+                            .executes(ctx -> giveLegendaryAccessory(ctx, "volcanic_fury_necklace"))))
+                    .then(Commands.literal("solar_bracelet")
+                        .then(Commands.argument("level", IntegerArgumentType.integer(1, 10))
+                            .executes(ctx -> giveLegendaryAccessory(ctx, "solar_flame_bracelet"))))
+                    .then(Commands.literal("tiger_belt")
+                        .then(Commands.argument("level", IntegerArgumentType.integer(1, 10))
+                            .executes(ctx -> giveLegendaryAccessory(ctx, "fire_tiger_belt"))))
+                    .then(Commands.literal("phoenix_charm")
+                        .then(Commands.argument("level", IntegerArgumentType.integer(1, 10))
+                            .executes(ctx -> giveLegendaryAccessory(ctx, "phoenix_charm"))))
+                    .then(Commands.literal("demon_cloak")
+                        .then(Commands.argument("level", IntegerArgumentType.integer(1, 10))
+                            .executes(ctx -> giveLegendaryAccessory(ctx, "blazing_demon_cloak")))))
                 .then(Commands.literal("water")
                     .then(Commands.literal("ring")
                         .then(registerRarityAndLevel(AccessoryElement.WATER, AccessoryType.RING)))
@@ -131,5 +149,45 @@ public class GiveAccessoryCommand {
                 case CLOAK -> new ItemStack(ModItems.WATER_CLOAK.get());
             };
         }
+    }
+    
+    private static int giveLegendaryAccessory(CommandContext<CommandSourceStack> ctx, String accessoryId) {
+        ServerPlayer player = ctx.getSource().getPlayer();
+        if (player == null) {
+            ctx.getSource().sendFailure(Component.literal("Only players can use this command"));
+            return 0;
+        }
+        
+        int level = IntegerArgumentType.getInteger(ctx, "level");
+        
+        ItemStack stack = createLegendaryAccessoryStack(accessoryId);
+        if (stack.isEmpty()) {
+            ctx.getSource().sendFailure(Component.literal("Failed to create legendary accessory"));
+            return 0;
+        }
+        
+        BaseAccessoryItem.setRarity(stack, AccessoryRarity.LEGENDARY);
+        BaseAccessoryItem.setLevel(stack, level);
+        
+        player.addItem(stack);
+        
+        ctx.getSource().sendSuccess(
+            () -> Component.literal("Given Legendary " + accessoryId + " +" + level),
+            true
+        );
+        
+        return 1;
+    }
+    
+    private static ItemStack createLegendaryAccessoryStack(String accessoryId) {
+        return switch (accessoryId) {
+            case "fire_dragon_ring" -> new ItemStack(ModItems.FIRE_DRAGON_RING.get());
+            case "volcanic_fury_necklace" -> new ItemStack(ModItems.VOLCANIC_FURY_NECKLACE.get());
+            case "solar_flame_bracelet" -> new ItemStack(ModItems.SOLAR_FLAME_BRACELET.get());
+            case "fire_tiger_belt" -> new ItemStack(ModItems.FIRE_TIGER_BELT.get());
+            case "phoenix_charm" -> new ItemStack(ModItems.PHOENIX_CHARM.get());
+            case "blazing_demon_cloak" -> new ItemStack(ModItems.BLAZING_DEMON_CLOAK.get());
+            default -> ItemStack.EMPTY;
+        };
     }
 }

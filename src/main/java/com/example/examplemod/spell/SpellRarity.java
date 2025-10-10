@@ -6,7 +6,8 @@ public enum SpellRarity {
     RARE(0xFF5555FF, "Rare"),
     EPIC(0xFFAA00AA, "Epic"),
     LEGENDARY(0xFFFFAA00, "Legendary"),
-    MYTHIC(0xFFFF5555, "Mythic");
+    MYTHIC(0xFFFF5555, "Mythic"),
+    NECROMANCER_FIRE(0xFF8B0000, "Necromancer Fire"); // Темно-красный цвет для некроманта огня
 
     private final int color;
     private final String displayName;

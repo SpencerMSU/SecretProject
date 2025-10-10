@@ -4,7 +4,7 @@ package com.example.examplemod.accessory;
  * Типы аксессуаров и их слоты в Curios
  */
 public enum AccessoryType {
-    RING("ring1", "Кольцо", "Ring"),
+    RING("ring", "Кольцо", "Ring"),
     NECKLACE("necklace", "Ожерелье", "Necklace"),
     BRACELET("bracelet", "Браслет", "Bracelet"),
     BELT("belt", "Пояс", "Belt"),
