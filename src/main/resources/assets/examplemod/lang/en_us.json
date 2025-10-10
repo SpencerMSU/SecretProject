@@ -1,4 +1,12 @@
 {
+  "_comment": "Curios Slots",
+  "curios.identifier.ring": "Ring",
+  "curios.identifier.necklace": "Necklace",
+  "curios.identifier.bracelet": "Bracelet",
+  "curios.identifier.belt": "Belt",
+  "curios.identifier.charm": "Charm",
+  "curios.identifier.back": "Back",
+  
   "_comment": "Enchantment Stone",
   "item.examplemod.enchantment_stone": "Enchantment Stone",
   
