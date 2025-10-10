@@ -8,6 +8,12 @@ public interface IMana {
     void setCurrentMana(int value);
     void setMaxMana(int value);
     void setRegenPerSecond(int value);
+    
+    // Флаги для отслеживания ручной установки значений
+    boolean isMaxManaManuallySet();
+    void setMaxManaManuallySet(boolean value);
+    boolean isRegenManuallySet();
+    void setRegenManuallySet(boolean value);
 
     default void addMana(int amount) {
         setCurrentMana(Math.min(getCurrentMana() + amount, getMaxMana()));

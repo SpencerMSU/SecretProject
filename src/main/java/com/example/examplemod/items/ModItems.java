@@ -54,6 +54,43 @@ public class ModItems {
         new Item.Properties()
     );
 
+    // Новые огненные аксессуары (легендарные)
+    public static final DeferredItem<FireDragonRingItem> FIRE_DRAGON_RING = ITEMS.registerItem(
+        "fire_dragon_ring",
+        FireDragonRingItem::new,
+        new Item.Properties()
+    );
+
+    public static final DeferredItem<VolcanicFuryNecklaceItem> VOLCANIC_FURY_NECKLACE = ITEMS.registerItem(
+        "volcanic_fury_necklace",
+        VolcanicFuryNecklaceItem::new,
+        new Item.Properties()
+    );
+
+    public static final DeferredItem<SolarFlameBraceletItem> SOLAR_FLAME_BRACELET = ITEMS.registerItem(
+        "solar_flame_bracelet",
+        SolarFlameBraceletItem::new,
+        new Item.Properties()
+    );
+
+    public static final DeferredItem<FireTigerBeltItem> FIRE_TIGER_BELT = ITEMS.registerItem(
+        "fire_tiger_belt",
+        FireTigerBeltItem::new,
+        new Item.Properties()
+    );
+
+    public static final DeferredItem<PhoenixCharmItem> PHOENIX_CHARM = ITEMS.registerItem(
+        "phoenix_charm",
+        PhoenixCharmItem::new,
+        new Item.Properties()
+    );
+
+    public static final DeferredItem<BlazingDemonCloakItem> BLAZING_DEMON_CLOAK = ITEMS.registerItem(
+        "blazing_demon_cloak",
+        BlazingDemonCloakItem::new,
+        new Item.Properties()
+    );
+
     // Водные аксессуары
     public static final DeferredItem<WaterRingItem> WATER_RING = ITEMS.registerItem(
         "water_ring",

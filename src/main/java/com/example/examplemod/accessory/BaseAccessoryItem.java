@@ -235,4 +235,30 @@ public abstract class BaseAccessoryItem extends Item implements ICurioItem {
     public boolean canEquipFromUse(SlotContext slotContext, ItemStack stack) {
         return true;
     }
+    
+    @Override
+    public void curioTick(SlotContext slotContext, ItemStack stack) {
+        // Аксессуар работает в слоте
+    }
+    
+    @Override
+    public void onEquip(SlotContext slotContext, ItemStack prevStack, ItemStack stack) {
+        // Аксессуар экипирован
+    }
+    
+    @Override
+    public void onUnequip(SlotContext slotContext, ItemStack newStack, ItemStack stack) {
+        // Аксессуар снят
+    }
+    
+    @Override
+    public boolean canEquip(SlotContext slotContext, ItemStack stack) {
+        // Проверяем, подходит ли аксессуар для этого слота
+        return slotContext.identifier().equals(accessoryType.getCuriosSlot());
+    }
+    
+    @Override
+    public boolean canUnequip(SlotContext slotContext, ItemStack stack) {
+        return true;
+    }
 }

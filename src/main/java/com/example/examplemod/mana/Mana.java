@@ -6,9 +6,11 @@ public class Mana implements IMana {
     private int currentMana;
     private int maxMana;
     private int regenPerSecond;
+    private boolean maxManaManuallySet = false;
+    private boolean regenManuallySet = false;
 
     public Mana() {
-        this.maxMana = 100;
+        this.maxMana = 1000;
         this.currentMana = this.maxMana;
         this.regenPerSecond = 1;
     }
@@ -42,17 +44,41 @@ public class Mana implements IMana {
     public void setRegenPerSecond(int value) {
         this.regenPerSecond = value;
     }
+    
+    @Override
+    public boolean isMaxManaManuallySet() {
+        return maxManaManuallySet;
+    }
+    
+    @Override
+    public void setMaxManaManuallySet(boolean value) {
+        this.maxManaManuallySet = value;
+    }
+    
+    @Override
+    public boolean isRegenManuallySet() {
+        return regenManuallySet;
+    }
+    
+    @Override
+    public void setRegenManuallySet(boolean value) {
+        this.regenManuallySet = value;
+    }
 
     public void saveNBTData(CompoundTag tag) {
         tag.putInt("Current", currentMana);
         tag.putInt("Max", maxMana);
         tag.putInt("Regen", regenPerSecond);
+        tag.putBoolean("MaxManuallySet", maxManaManuallySet);
+        tag.putBoolean("RegenManuallySet", regenManuallySet);
     }
 
     public void loadNBTData(CompoundTag tag) {
         if (tag.contains("Current")) this.currentMana = tag.getInt("Current");
         if (tag.contains("Max")) this.maxMana = tag.getInt("Max");
         if (tag.contains("Regen")) this.regenPerSecond = tag.getInt("Regen");
+        if (tag.contains("MaxManuallySet")) this.maxManaManuallySet = tag.getBoolean("MaxManuallySet");
+        if (tag.contains("RegenManuallySet")) this.regenManuallySet = tag.getBoolean("RegenManuallySet");
         clamp();
     }
 }

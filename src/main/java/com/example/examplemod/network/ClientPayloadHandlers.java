@@ -1,6 +1,7 @@
 package com.example.examplemod.network;
 
 import com.example.examplemod.mana.ManaProvider;
+import com.example.examplemod.client.spell.ClientSpellState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.player.Player;
 
@@ -16,5 +17,13 @@ public final class ClientPayloadHandlers {
         mana.setCurrentMana(payload.current());
         mana.setRegenPerSecond(payload.regen());
         mana.clamp();
+    }
+    
+    public static void handlePlayerDataSync(PlayerDataSyncPayload payload) {
+        ClientSpellState.loadPlayerData(
+            payload.scrollOffset(),
+            payload.hotbarSpells(),
+            payload.selectedClass()
+        );
     }
 }
