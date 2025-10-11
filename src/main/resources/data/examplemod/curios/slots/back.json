@@ -1,9 +1,0 @@
-{
-  "size": 1,
-  "order": 60,
-  "icon": "curios:slot/empty_back_slot",
-  "replace": false,
-  "operation": "SET",
-  "use_native_gui": true,
-  "render_toggle": true
-}

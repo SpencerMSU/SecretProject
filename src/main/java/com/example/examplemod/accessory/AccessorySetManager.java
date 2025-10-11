@@ -1,9 +1,9 @@
 package com.example.examplemod.accessory;
 
+import io.wispforest.accessories.api.AccessoriesCapability;
+import io.wispforest.accessories.api.AccessoriesContainer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import top.theillusivec4.curios.api.CuriosApi;
-import top.theillusivec4.curios.api.SlotResult;
 
 import java.util.*;
 
@@ -33,12 +33,23 @@ public class AccessorySetManager {
             }
             
             // Собираем все надетые аксессуары
-            List<SlotResult> equippedCurios = CuriosApi.getCuriosInventory(player)
-                .map(handler -> handler.findCurios(stack -> stack.getItem() instanceof BaseAccessoryItem))
-                .orElse(Collections.emptyList());
+            List<ItemStack> equippedAccessories = new ArrayList<>();
             
-            for (SlotResult slotResult : equippedCurios) {
-                ItemStack stack = slotResult.stack();
+            AccessoriesCapability capability = AccessoriesCapability.get(player);
+            if (capability != null) {
+                AccessoriesContainer container = capability.getContainer();
+                if (container != null) {
+                    container.getAccessories().forEach((slotName, accessories) -> {
+                        for (var accessoryStack : accessories.getAccessories()) {
+                            if (accessoryStack.getItem() instanceof BaseAccessoryItem) {
+                                equippedAccessories.add(accessoryStack);
+                            }
+                        }
+                    });
+                }
+            }
+            
+            for (ItemStack stack : equippedAccessories) {
                 if (stack.getItem() instanceof BaseAccessoryItem accessory) {
                     AccessoryElement element = accessory.getElement();
                     AccessoryType type = accessory.getAccessoryType();
@@ -57,7 +68,7 @@ public class AccessorySetManager {
             hasMaxWaterSet = hasFullWaterSet && isMaxSet(accessoriesByElement.get(AccessoryElement.WATER));
             
             // Подсчитываем общие статы
-            totalStats = calculateTotalStats(equippedCurios);
+            totalStats = calculateTotalStats(equippedAccessories);
             setBonusStats = calculateSetBonuses();
         }
         
@@ -75,13 +86,12 @@ public class AccessorySetManager {
             return true;
         }
         
-        private AccessoryStats calculateTotalStats(List<SlotResult> equippedCurios) {
+        private AccessoryStats calculateTotalStats(List<ItemStack> equippedAccessories) {
             double health = 0, mana = 0, manaRegen = 0;
             double damage = 0, defense = 0, speed = 0;
             double elementalPower = 0, elementalResistance = 0;
             
-            for (SlotResult slotResult : equippedCurios) {
-                ItemStack stack = slotResult.stack();
+            for (ItemStack stack : equippedAccessories) {
                 if (stack.getItem() instanceof BaseAccessoryItem accessory) {
                     AccessoryStats stats = accessory.getStats(stack);
                     
