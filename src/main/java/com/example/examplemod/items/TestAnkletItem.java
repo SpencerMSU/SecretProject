@@ -21,41 +21,14 @@ public class TestAnkletItem extends Item implements Accessory {
         ItemStack stack = super.getDefaultInstance();
         
         // ВАЖНО! Accessories мод ищет тег НА УРОВНЕ КОМПОНЕНТОВ, а не в custom_data!
-        // Используем специальный DataComponent от мода Accessories
-        try {
-            // Получаем класс AccessoriesDataComponents
-            Class<?> dataComponentsClass = Class.forName("io.wispforest.accessories.api.AccessoriesDataComponents");
-            
-            // Получаем поле SLOT_VALIDATION
-            java.lang.reflect.Field slotValidationField = dataComponentsClass.getDeclaredField("SLOT_VALIDATION");
-            slotValidationField.setAccessible(true);
-            
-            @SuppressWarnings("unchecked")
-            net.minecraft.core.component.DataComponentType<Object> slotValidationType = 
-                (net.minecraft.core.component.DataComponentType<Object>) slotValidationField.get(null);
-            
-            // Создаем SlotValidation с нужным слотом
-            java.util.Set<String> validSlots = new java.util.HashSet<>();
-            validSlots.add("anklet");
-            java.util.Set<String> invalidSlots = new java.util.HashSet<>();
-            
-            // Получаем конструктор SlotValidation
-            Class<?> slotValidationClass = Class.forName("io.wispforest.accessories.api.data.SlotValidation");
-            java.lang.reflect.Constructor<?> constructor = slotValidationClass.getDeclaredConstructor(java.util.Set.class, java.util.Set.class);
-            constructor.setAccessible(true);
-            
-            Object slotValidation = constructor.newInstance(validSlots, invalidSlots);
-            
-            // Устанавливаем компонент
-            @SuppressWarnings("unchecked")
-            net.minecraft.core.component.DataComponentType rawType = (net.minecraft.core.component.DataComponentType) slotValidationType;
-            stack.set(rawType, slotValidation);
-            
+        // Используем утилитарный метод из BaseAccessoryItem для установки SLOT_VALIDATION DataComponent
+        java.util.Set<String> validSlots = new java.util.HashSet<>();
+        validSlots.add("anklet");
+        
+        if (com.example.examplemod.accessory.BaseAccessoryItem.setSlotValidation(stack, validSlots)) {
             System.out.println("TestAnkletItem SLOT_VALIDATION DataComponent set successfully!");
-            
-        } catch (Exception e) {
-            System.err.println("ERROR: Failed to set SlotValidation component!");
-            e.printStackTrace();
+        } else {
+            System.err.println("TestAnkletItem: Failed to set SLOT_VALIDATION DataComponent!");
         }
         
         return stack;

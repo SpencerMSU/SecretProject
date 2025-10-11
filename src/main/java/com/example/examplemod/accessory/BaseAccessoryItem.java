@@ -28,6 +28,83 @@ public abstract class BaseAccessoryItem extends Item implements Accessory {
     // NBT ключи
     public static final String NBT_LEVEL = "AccessoryLevel";
     public static final String NBT_RARITY = "AccessoryRarity";
+    
+    // Кэшированные рефлексивные объекты для работы с Accessories mod
+    private static Class<?> dataComponentsClass;
+    private static net.minecraft.core.component.DataComponentType<?> slotValidationType;
+    private static Class<?> slotValidationClass;
+    private static java.lang.reflect.Constructor<?> slotValidationConstructor;
+    private static boolean reflectionInitialized = false;
+    private static boolean reflectionFailed = false;
+    
+    /**
+     * Инициализирует рефлексивный доступ к классам Accessories мода
+     * Вызывается один раз при первом использовании
+     */
+    private static synchronized void initializeReflection() {
+        if (reflectionInitialized || reflectionFailed) {
+            return;
+        }
+        
+        try {
+            // Получаем класс AccessoriesDataComponents
+            dataComponentsClass = Class.forName("io.wispforest.accessories.api.AccessoriesDataComponents");
+            
+            // Получаем поле SLOT_VALIDATION
+            java.lang.reflect.Field slotValidationField = dataComponentsClass.getDeclaredField("SLOT_VALIDATION");
+            slotValidationField.setAccessible(true);
+            slotValidationType = (net.minecraft.core.component.DataComponentType<?>) slotValidationField.get(null);
+            
+            // Получаем класс и конструктор SlotValidation
+            slotValidationClass = Class.forName("io.wispforest.accessories.api.data.SlotValidation");
+            slotValidationConstructor = slotValidationClass.getDeclaredConstructor(java.util.Set.class, java.util.Set.class);
+            slotValidationConstructor.setAccessible(true);
+            
+            reflectionInitialized = true;
+            System.out.println("Successfully initialized reflection for Accessories mod");
+        } catch (ClassNotFoundException e) {
+            System.err.println("ERROR: Accessories mod classes not found. Is the mod installed?");
+            reflectionFailed = true;
+        } catch (NoSuchFieldException | NoSuchMethodException e) {
+            System.err.println("ERROR: Accessories mod API changed. Reflection failed: " + e.getMessage());
+            reflectionFailed = true;
+        } catch (Exception e) {
+            System.err.println("ERROR: Failed to initialize reflection for Accessories mod");
+            e.printStackTrace();
+            reflectionFailed = true;
+        }
+    }
+    
+    /**
+     * Устанавливает SLOT_VALIDATION DataComponent для ItemStack
+     * @param stack ItemStack для установки слотов
+     * @param validSlots Набор валидных слотов
+     * @return true если успешно, false если произошла ошибка
+     */
+    protected static boolean setSlotValidation(ItemStack stack, java.util.Set<String> validSlots) {
+        initializeReflection();
+        
+        if (reflectionFailed) {
+            System.err.println("ERROR: Cannot set slot validation - reflection initialization failed");
+            return false;
+        }
+        
+        try {
+            java.util.Set<String> invalidSlots = new java.util.HashSet<>();
+            Object slotValidation = slotValidationConstructor.newInstance(validSlots, invalidSlots);
+            
+            @SuppressWarnings("unchecked")
+            net.minecraft.core.component.DataComponentType<Object> rawType = 
+                (net.minecraft.core.component.DataComponentType<Object>) slotValidationType;
+            stack.set(rawType, slotValidation);
+            
+            return true;
+        } catch (Exception e) {
+            System.err.println("ERROR: Failed to set SlotValidation component");
+            e.printStackTrace();
+            return false;
+        }
+    }
 
     public BaseAccessoryItem(AccessoryType type, AccessoryElement element, Properties properties) {
         super(applyDefaultNBT(properties.stacksTo(1), type)); // Аксессуары не стакаются
@@ -74,44 +151,17 @@ public abstract class BaseAccessoryItem extends Item implements Accessory {
         
         // ВАЖНО! Accessories мод ищет тег НА УРОВНЕ КОМПОНЕНТОВ, а не в custom_data!
         // Используем специальный DataComponent от мода Accessories
-        try {
-            // Получаем класс AccessoriesDataComponents
-            Class<?> dataComponentsClass = Class.forName("io.wispforest.accessories.api.AccessoriesDataComponents");
-            
-            // Получаем поле SLOT_VALIDATION
-            java.lang.reflect.Field slotValidationField = dataComponentsClass.getDeclaredField("SLOT_VALIDATION");
-            slotValidationField.setAccessible(true);
-            
-            @SuppressWarnings("unchecked")
-            net.minecraft.core.component.DataComponentType<Object> slotValidationType = 
-                (net.minecraft.core.component.DataComponentType<Object>) slotValidationField.get(null);
-            
-            // Создаем SlotValidation с совместимыми слотами
-            java.util.Set<String> validSlots = new java.util.HashSet<>();
-            for (String slot : accessoryType.getCompatibleSlots()) {
-                validSlots.add(slot);
-                System.out.println("  Adding valid slot: " + slot);
-            }
-            java.util.Set<String> invalidSlots = new java.util.HashSet<>();
-            
-            // Получаем конструктор SlotValidation
-            Class<?> slotValidationClass = Class.forName("io.wispforest.accessories.api.data.SlotValidation");
-            java.lang.reflect.Constructor<?> constructor = slotValidationClass.getDeclaredConstructor(java.util.Set.class, java.util.Set.class);
-            constructor.setAccessible(true);
-            
-            Object slotValidation = constructor.newInstance(validSlots, invalidSlots);
-            
-            // Устанавливаем компонент
-            @SuppressWarnings("unchecked")
-            net.minecraft.core.component.DataComponentType rawType = (net.minecraft.core.component.DataComponentType) slotValidationType;
-            stack.set(rawType, slotValidation);
-            
+        java.util.Set<String> validSlots = new java.util.HashSet<>();
+        for (String slot : accessoryType.getCompatibleSlots()) {
+            validSlots.add(slot);
+            System.out.println("  Adding valid slot: " + slot);
+        }
+        
+        if (setSlotValidation(stack, validSlots)) {
             System.out.println("  SlotValidation DataComponent successfully set!");
             System.out.println("  Valid slots: " + validSlots);
-            
-        } catch (Exception e) {
-            System.err.println("ERROR: Failed to set SlotValidation component!");
-            e.printStackTrace();
+        } else {
+            System.err.println("  WARNING: Failed to set SlotValidation DataComponent");
         }
         
         System.out.println(">>> getDefaultInstance() FINISHED <<<");
@@ -412,42 +462,15 @@ public abstract class BaseAccessoryItem extends Item implements Accessory {
         ItemStack stack = new ItemStack(item);
         
         // ВАЖНО! Accessories мод ищет тег НА УРОВНЕ КОМПОНЕНТОВ, а не в custom_data!
-        // Используем специальный DataComponent от мода Accessories
-        try {
-            // Получаем класс AccessoriesDataComponents
-            Class<?> dataComponentsClass = Class.forName("io.wispforest.accessories.api.AccessoriesDataComponents");
-            
-            // Получаем поле SLOT_VALIDATION
-            java.lang.reflect.Field slotValidationField = dataComponentsClass.getDeclaredField("SLOT_VALIDATION");
-            slotValidationField.setAccessible(true);
-            
-            @SuppressWarnings("unchecked")
-            net.minecraft.core.component.DataComponentType<Object> slotValidationType = 
-                (net.minecraft.core.component.DataComponentType<Object>) slotValidationField.get(null);
-            
-            // Создаем SlotValidation с нужным слотом
-            java.util.Set<String> validSlots = new java.util.HashSet<>();
-            validSlots.add(specificSlot);
-            java.util.Set<String> invalidSlots = new java.util.HashSet<>();
-            
-            // Получаем конструктор SlotValidation
-            Class<?> slotValidationClass = Class.forName("io.wispforest.accessories.api.data.SlotValidation");
-            java.lang.reflect.Constructor<?> constructor = slotValidationClass.getDeclaredConstructor(java.util.Set.class, java.util.Set.class);
-            constructor.setAccessible(true);
-            
-            Object slotValidation = constructor.newInstance(validSlots, invalidSlots);
-            
-            // Устанавливаем компонент
-            @SuppressWarnings("unchecked")
-            net.minecraft.core.component.DataComponentType rawType = (net.minecraft.core.component.DataComponentType) slotValidationType;
-            stack.set(rawType, slotValidation);
-            
+        // Используем утилитарный метод для установки SLOT_VALIDATION DataComponent
+        java.util.Set<String> validSlots = new java.util.HashSet<>();
+        validSlots.add(specificSlot);
+        
+        if (setSlotValidation(stack, validSlots)) {
             System.out.println("  Adding ONLY slot: " + specificSlot + " via DataComponent!");
             System.out.println("  SlotValidation successfully set!");
-            
-        } catch (Exception e) {
-            System.err.println("ERROR: Failed to set SlotValidation component!");
-            e.printStackTrace();
+        } else {
+            System.err.println("  WARNING: Failed to set SlotValidation DataComponent");
         }
         
         System.out.println(">>> createForCreativeTabWithSlot() DONE <<<");
