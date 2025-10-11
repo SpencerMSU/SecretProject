@@ -1,4 +1,12 @@
 {
+  "_comment": "Слоты Curios",
+  "curios.identifier.ring": "Кольцо",
+  "curios.identifier.necklace": "Ожерелье",
+  "curios.identifier.bracelet": "Браслет",
+  "curios.identifier.belt": "Пояс",
+  "curios.identifier.charm": "Амулет",
+  "curios.identifier.back": "Спина",
+  
   "_comment": "Камень заточки",
   "item.examplemod.enchantment_stone": "Камень заточки",
   
