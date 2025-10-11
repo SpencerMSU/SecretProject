@@ -65,13 +65,13 @@ src/main/resources/data/examplemod/curios/
 После добавления файла `player.json`:
 - ✅ Curios API теперь корректно привязывает слоты к игроку
 - ✅ ICuriosItemHandler будет доступен через `CuriosApi.getCuriosInventory(player)`
-- ✅ Все 8 слотов (3 ring + 1 каждого другого типа) будут доступны в инвентаре
+- ✅ Все 8 слотов (3 ring + 5 других типов: necklace, bracelet, belt, charm, back) будут доступны в инвентаре
 - ✅ Команда `/curiostest` должна показать успешную инициализацию
 
 After adding the `player.json` file:
 - ✅ Curios API now correctly binds slots to the player
 - ✅ ICuriosItemHandler will be available via `CuriosApi.getCuriosInventory(player)`
-- ✅ All 8 slots (3 ring + 1 of each other type) will be available in inventory
+- ✅ All 8 slots (3 ring + 5 other types: necklace, bracelet, belt, charm, back) will be available in inventory
 - ✅ The `/curiostest` command should show successful initialization
 
 ## Важные замечания (Important Notes)
