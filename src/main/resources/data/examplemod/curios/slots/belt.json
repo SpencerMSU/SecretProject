@@ -3,5 +3,7 @@
   "order": 40,
   "icon": "curios:slot/empty_belt_slot",
   "replace": false,
-  "operation": "SET"
+  "operation": "SET",
+  "use_native_gui": true,
+  "render_toggle": true
 }

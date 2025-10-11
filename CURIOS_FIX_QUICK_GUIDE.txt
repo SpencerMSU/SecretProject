@@ -1,0 +1,181 @@
+# CURIOS SLOTS - КРАТКАЯ ИНСТРУКЦИЯ / QUICK GUIDE
+
+## 🎯 ЧТО ИСПРАВЛЕНО / WHAT WAS FIXED
+
+### Проблема / Problem:
+❌ Кнопка Curios открывается, но слоты не появляются  
+❌ Curios button opens but slots don't appear
+
+❌ Слоты должны быть слева, но их нет  
+❌ Slots should be on the left but they're not there
+
+### Решение / Solution:
+✅ Добавлено `"use_native_gui": true` - слоты теперь **СЛЕВА**  
+✅ Added `"use_native_gui": true` - slots now on the **LEFT**
+
+✅ Добавлено `"render_toggle": true` - кнопки видимости  
+✅ Added `"render_toggle": true` - visibility toggles
+
+✅ Исправлен размер слота колец: 2 вместо 3  
+✅ Fixed ring slot size: 2 instead of 3
+
+---
+
+## 📋 ДОСТУПНЫЕ СЛОТЫ / AVAILABLE SLOTS
+
+| Слот / Slot | Количество / Amount | Порядок / Order |
+|-------------|-------------------|----------------|
+| 💍 Ring (Кольцо) | 2 | 10 |
+| 📿 Necklace (Ожерелье) | 1 | 20 |
+| ⌚ Bracelet (Браслет) | 1 | 30 |
+| 🎗️ Belt (Пояс) | 1 | 40 |
+| 🔮 Charm (Амулет) | 1 | 50 |
+| 🧥 Back/Cloak (Плащ) | 1 | 60 |
+
+**ИТОГО / TOTAL: 7 слотов / slots** (2 rings + 5 other types)
+
+---
+
+## 🔧 КАК ПРОВЕРИТЬ / HOW TO TEST
+
+### 1. Пересобрать / Rebuild:
+```bash
+./gradlew clean build
+```
+
+### 2. Запустить / Run:
+```bash
+./gradlew runClient
+```
+
+### 3. В игре / In Game:
+1. Откройте инвентарь / Open inventory (E)
+2. Нажмите кнопку Curios
+3. Слоты появятся **СЛЕВА** / Slots will appear on the **LEFT**
+
+### 4. Команда тестирования / Test Command:
+```
+/curiostest
+```
+Должно показать / Should show:  
+"Curios API работает! Доступно слотов: 7"
+
+---
+
+## 📁 ИЗМЕНЕННЫЕ ФАЙЛЫ / MODIFIED FILES
+
+Все файлы в / All files in:  
+`src/main/resources/data/examplemod/curios/slots/`
+
+✅ ring.json  
+✅ necklace.json  
+✅ bracelet.json  
+✅ belt.json  
+✅ charm.json  
+✅ back.json  
+
+---
+
+## ⚙️ НОВЫЕ ПАРАМЕТРЫ / NEW PARAMETERS
+
+```json
+{
+  "size": 2,
+  "order": 10,
+  "icon": "curios:slot/empty_ring_slot",
+  "replace": false,
+  "operation": "SET",
+  "use_native_gui": true,    // ← Слоты СЛЕВА! / Slots on LEFT!
+  "render_toggle": true       // ← Кнопка видимости / Visibility button
+}
+```
+
+### `use_native_gui`:
+- `true` = слоты СЛЕВА (нативная позиция) / LEFT side (native position)
+- `false` = слоты справа (по умолчанию) / right side (default)
+
+### `render_toggle`:
+- `true` = показывать кнопку переключения / show toggle button
+- `false` = скрыть кнопку / hide button
+
+---
+
+## 📊 ВИЗУАЛЬНАЯ СХЕМА / VISUAL LAYOUT
+
+```
+┌─────────────────────────────────────┐
+│       ИНВЕНТАРЬ ИГРОКА              │
+│       PLAYER INVENTORY              │
+├─────────────────────────────────────┤
+│                                     │
+│  СЛЕВА / LEFT:        СПРАВА:      │
+│  ┌─────────────┐     ┌──────────┐  │
+│  │ 💍 Кольцо 1 │     │  Шлем    │  │
+│  │ 💍 Кольцо 2 │     │ Нагрудник│  │
+│  │ 📿 Ожерелье │     │  Поножи  │  │
+│  │ ⌚ Браслет   │     │  Ботинки │  │
+│  │ 🎗️ Пояс     │     └──────────┘  │
+│  │ 🔮 Амулет   │                   │
+│  │ 🧥 Плащ     │     [Инвентарь]  │
+│  └─────────────┘     [Inventory]  │
+│  ↑ НОВОЕ МЕСТО      └────────────┘ │
+│    NEW POSITION                    │
+└─────────────────────────────────────┘
+```
+
+---
+
+## 📚 ДОКУМЕНТАЦИЯ / DOCUMENTATION
+
+### Полная документация / Full documentation:
+- `CURIOS_SLOT_POSITION_FIX.md` - Подробное описание / Detailed description
+
+### Официальная документация Curios:
+- https://docs.illusivesoulworks.com/curios/slots/
+- https://docs.illusivesoulworks.com/curios/entities/
+
+---
+
+## ✅ РЕЗУЛЬТАТ / RESULT
+
+### ДО / BEFORE:
+❌ Слоты не появляются или справа  
+❌ Slots don't appear or on the right
+
+❌ Нет кнопок видимости  
+❌ No visibility toggles
+
+❌ 3 кольца (неправильно)  
+❌ 3 rings (incorrect)
+
+### ПОСЛЕ / AFTER:
+✅ Слоты появляются **СЛЕВА**  
+✅ Slots appear on the **LEFT**
+
+✅ Есть кнопки переключения  
+✅ Toggle buttons present
+
+✅ 2 кольца (правильно)  
+✅ 2 rings (correct)
+
+✅ **ВСЕГО 7 СЛОТОВ РАБОТАЕТ!**  
+✅ **TOTAL 7 SLOTS WORKING!**
+
+---
+
+## 🚨 ВАЖНО / IMPORTANT
+
+1. ⚡ Обязательно пересоберите мод!  
+   **You MUST rebuild the mod!**
+
+2. ⚡ Проверьте в игре, что слоты **СЛЕВА**  
+   **Check in game that slots are on the LEFT**
+
+3. ⚡ Убедитесь, что Curios установлен (версия 9.5.1+)  
+   **Make sure Curios is installed (version 9.5.1+)**
+
+---
+
+**Дата / Date**: 2025-10-11  
+**Версия Curios**: 9.5.1+1.21.1  
+**Статус / Status**: ✅ ГОТОВО / READY
