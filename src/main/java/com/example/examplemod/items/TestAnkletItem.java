@@ -1,5 +1,6 @@
 package com.example.examplemod.items;
 
+import com.example.examplemod.accessory.BaseAccessoryItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import io.wispforest.accessories.api.Accessory;
@@ -25,7 +26,7 @@ public class TestAnkletItem extends Item implements Accessory {
         java.util.Set<String> validSlots = new java.util.HashSet<>();
         validSlots.add("anklet");
         
-        if (com.example.examplemod.accessory.BaseAccessoryItem.setSlotValidation(stack, validSlots)) {
+        if (BaseAccessoryItem.setSlotValidation(stack, validSlots)) {
             System.out.println("TestAnkletItem SLOT_VALIDATION DataComponent set successfully!");
         } else {
             System.err.println("TestAnkletItem: Failed to set SLOT_VALIDATION DataComponent!");

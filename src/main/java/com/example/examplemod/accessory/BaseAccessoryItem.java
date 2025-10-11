@@ -37,6 +37,9 @@ public abstract class BaseAccessoryItem extends Item implements Accessory {
     private static boolean reflectionInitialized = false;
     private static boolean reflectionFailed = false;
     
+    // Пустой набор для invalidSlots (переиспользуется)
+    private static final java.util.Set<String> EMPTY_INVALID_SLOTS = java.util.Collections.emptySet();
+    
     /**
      * Инициализирует рефлексивный доступ к классам Accessories мода
      * Вызывается один раз при первом использовании
@@ -82,6 +85,16 @@ public abstract class BaseAccessoryItem extends Item implements Accessory {
      * @return true если успешно, false если произошла ошибка
      */
     protected static boolean setSlotValidation(ItemStack stack, java.util.Set<String> validSlots) {
+        if (stack == null) {
+            System.err.println("ERROR: Cannot set slot validation - stack is null");
+            return false;
+        }
+        
+        if (validSlots == null || validSlots.isEmpty()) {
+            System.err.println("ERROR: Cannot set slot validation - validSlots is null or empty");
+            return false;
+        }
+        
         initializeReflection();
         
         if (reflectionFailed) {
@@ -90,8 +103,7 @@ public abstract class BaseAccessoryItem extends Item implements Accessory {
         }
         
         try {
-            java.util.Set<String> invalidSlots = new java.util.HashSet<>();
-            Object slotValidation = slotValidationConstructor.newInstance(validSlots, invalidSlots);
+            Object slotValidation = slotValidationConstructor.newInstance(validSlots, EMPTY_INVALID_SLOTS);
             
             @SuppressWarnings("unchecked")
             net.minecraft.core.component.DataComponentType<Object> rawType = 
