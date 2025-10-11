@@ -85,11 +85,11 @@ description='''${mod_description}'''
     ordering="NONE"
     side="BOTH"
 
-# Curios API dependency
+# Accessories API dependency
 [[dependencies.${mod_id}]]
-    modId="curios"
+    modId="accessories"
     type="required"
-    versionRange="[9.5.1,)"
+    versionRange="[1.1.0,)"
     ordering="AFTER"
     side="BOTH"
 

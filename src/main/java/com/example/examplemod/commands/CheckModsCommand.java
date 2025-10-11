@@ -27,7 +27,7 @@ public class CheckModsCommand {
         );
         
         // Проверяем основные моды
-        String[] importantMods = {"curios", "neoforge", "minecraft", "examplemod"};
+        String[] importantMods = {"accessories", "neoforge", "minecraft", "examplemod"};
         
         for (String modId : importantMods) {
             boolean isLoaded = ModList.get().isLoaded(modId);

@@ -1,7 +1,7 @@
 package com.example.examplemod.accessory;
 
 /**
- * Типы аксессуаров и их слоты в Curios
+ * Типы аксессуаров и их слоты в Accessories
  */
 public enum AccessoryType {
     RING("ring", "Кольцо", "Ring"),
@@ -11,18 +11,18 @@ public enum AccessoryType {
     CHARM("charm", "Амулет", "Charm"),
     CLOAK("back", "Плащ", "Cloak");
 
-    private final String curiosSlot;
+    private final String slotName;
     private final String russianName;
     private final String englishName;
 
-    AccessoryType(String curiosSlot, String russianName, String englishName) {
-        this.curiosSlot = curiosSlot;
+    AccessoryType(String slotName, String russianName, String englishName) {
+        this.slotName = slotName;
         this.russianName = russianName;
         this.englishName = englishName;
     }
 
-    public String getCuriosSlot() {
-        return curiosSlot;
+    public String getSlotName() {
+        return slotName;
     }
 
     public String getRussianName() {
