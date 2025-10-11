@@ -91,6 +91,7 @@ public class ModItems {
         new Item.Properties()
     );
 
+
     // Тестовый предмет с тегом anklet
     public static final DeferredItem<TestAnkletItem> TEST_ANKLET = ITEMS.registerItem(
         "test_anklet",
