@@ -7,14 +7,10 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.*;
 
-/**
- * Менеджер для отслеживания надетых аксессуаров и применения бонусов от наборов
- */
+
 public class AccessorySetManager {
     
-    /**
-     * Информация о надетых аксессуарах игрока
-     */
+
     public static class EquippedSetInfo {
         public final Map<AccessoryElement, List<ItemStack>> accessoriesByElement = new EnumMap<>(AccessoryElement.class);
         public final Map<AccessoryElement, Set<AccessoryType>> typesByElement = new EnumMap<>(AccessoryElement.class);
@@ -35,19 +31,11 @@ public class AccessorySetManager {
             // Собираем все надетые аксессуары
             List<ItemStack> equippedAccessories = new ArrayList<>();
             
-            AccessoriesCapability capability = AccessoriesCapability.get(player);
-            if (capability != null) {
-                AccessoriesContainer container = capability.getContainer();
-                if (container != null) {
-                    container.getAccessories().forEach((slotName, accessories) -> {
-                        for (var accessoryStack : accessories.getAccessories()) {
-                            if (accessoryStack.getItem() instanceof BaseAccessoryItem) {
-                                equippedAccessories.add(accessoryStack);
-                            }
-                        }
-                    });
-                }
-            }
+            // TODO: Временно упрощено - нужно обновить для нового API Accessories
+            // AccessoriesCapability capability = AccessoriesCapability.get(player);
+            // if (capability != null) {
+            //     // Получаем все аксессуары
+            // }
             
             for (ItemStack stack : equippedAccessories) {
                 if (stack.getItem() instanceof BaseAccessoryItem accessory) {

@@ -89,8 +89,8 @@ public class ManaHudOverlay {
         ClientSpellState.ensureInitialized();
 
         final int slots = ClientSpellState.getHotbarSize();
-        final int slotSize = 15;
-        final int gap = 3;
+        final int slotSize = 12; // Уменьшил размер с 15 до 12
+        final int gap = 2; // Уменьшил промежуток с 3 до 2
         // Center horizontally relative to mana bar
         final int left = manaBarX + (manaBarWidth - slotSize) / 2;
 
@@ -99,39 +99,13 @@ public class ManaHudOverlay {
         for (int i = 0; i < slots; i++) {
             int sx = left;
             int sy = top + i * (slotSize + gap);
-
-            var entry = ClientSpellState.getHotbarEntry(i);
-            
-            // Slot background with rarity-colored border
-            int rarityColor = entry != null ? entry.rarity().getColor() : 0xAA000000;
-            g.fill(sx - 2, sy - 2, sx + slotSize + 2, sy + slotSize + 2, rarityColor);
-            g.fill(sx - 1, sy - 1, sx + slotSize + 1, sy + slotSize + 1, 0xFF111827);
-
-            // Active outline (brighter glow)
-            if (i == active) {
-                int glowColor = entry != null ? entry.rarity().getColor() | 0xFF000000 : 0xFF60A5FA;
-                // Draw glowing border
-                g.fill(sx - 3, sy - 3, sx + slotSize + 3, sy - 2, glowColor);
-                g.fill(sx - 3, sy + slotSize + 2, sx + slotSize + 3, sy + slotSize + 3, glowColor);
-                g.fill(sx - 3, sy - 3, sx - 2, sy + slotSize + 3, glowColor);
-                g.fill(sx + slotSize + 2, sy - 3, sx + slotSize + 3, sy + slotSize + 3, glowColor);
-            }
-
-            if (entry != null) {
-                var itemRenderer = mc.getItemRenderer();
-                var pose = g.pose();
-                pose.pushPose();
-                // Center the icon within the smaller slot
-                int iconOffset = (slotSize - 16) / 2; // Center 16x16 icon in slot
-                g.renderItem(entry.icon(), sx + iconOffset, sy + iconOffset);
-                pose.popPose();
-            }
+            drawSpellSlot(g, sx, sy, slotSize, ClientSpellState.getHotbarEntry(i), i == active);
         }
         
         // Show active spell info to the right of the active slot
         var activeEntry = ClientSpellState.getHotbarEntry(active);
         if (activeEntry != null) {
-            int infoX = left + slotSize + 8;
+            int infoX = manaBarX + manaBarWidth + 6; // Уменьшил отступ
             int infoY = top + active * (slotSize + gap);
             
             // Spell name
@@ -142,8 +116,34 @@ public class ManaHudOverlay {
             String damageStr = "⚔" + activeEntry.damage();
             String manaStr = "✦" + activeEntry.manaCost();
             
-            g.drawString(mc.font, damageStr, infoX, infoY + 10, 0xFFFF5555, true);
-            g.drawString(mc.font, manaStr, infoX, infoY + 20, 0xFF5555FF, true);
+            g.drawString(mc.font, damageStr, infoX, infoY + 8, 0xFFFF5555, true); // Уменьшил отступ
+            g.drawString(mc.font, manaStr, infoX, infoY + 16, 0xFF5555FF, true); // Уменьшил отступ
+        }
+    }
+    
+    private static void drawSpellSlot(GuiGraphics g, int sx, int sy, int slotSize, SpellEntry entry, boolean isActive) {
+        // Slot background with rarity-colored border
+        int rarityColor = entry != null ? entry.rarity().getColor() : 0xAA000000;
+        g.fill(sx - 2, sy - 2, sx + slotSize + 2, sy + slotSize + 2, rarityColor);
+        g.fill(sx - 1, sy - 1, sx + slotSize + 1, sy + slotSize + 1, 0xFF111827);
+
+        // Active outline (brighter glow)
+        if (isActive) {
+            int glowColor = entry != null ? entry.rarity().getColor() | 0xFF000000 : 0xFF60A5FA;
+            // Draw glowing border
+            g.fill(sx - 3, sy - 3, sx + slotSize + 3, sy - 2, glowColor);
+            g.fill(sx - 3, sy + slotSize + 2, sx + slotSize + 3, sy + slotSize + 3, glowColor);
+            g.fill(sx - 3, sy - 3, sx - 2, sy + slotSize + 3, glowColor);
+            g.fill(sx + slotSize + 2, sy - 3, sx + slotSize + 3, sy + slotSize + 3, glowColor);
+        }
+
+        if (entry != null) {
+            var pose = g.pose();
+            pose.pushPose();
+            // Center the icon within the smaller slot
+            int iconOffset = (slotSize - 16) / 2; // Center 16x16 icon in slot
+            g.renderItem(entry.icon(), sx + iconOffset, sy + iconOffset);
+            pose.popPose();
         }
     }
 }

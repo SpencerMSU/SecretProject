@@ -1,5 +1,9 @@
 {
-  "order": 10,
-  "amount": 2,
-  "icon": "accessories:gui/slot/ring"
+  "slots": [
+    {
+      "id": "ring",
+      "order": 10,
+      "size": 1
+    }
+  ]
 }

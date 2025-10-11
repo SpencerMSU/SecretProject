@@ -1,8 +1,8 @@
 {
   "slots": [
     {
-      "id": "belt",
-      "order": 40,
+      "id": "mask",
+      "order": 140,
       "size": 1
     }
   ]
