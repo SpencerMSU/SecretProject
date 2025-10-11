@@ -390,7 +390,7 @@ public abstract class BaseAccessoryItem extends Item implements Accessory {
 
     /**
      * Создать ItemStack аксессуара с ОДНИМ конкретным слотом для креативных вкладок
-     * ПРАВИЛЬНАЯ структура: accessories:slot_validation { valid_slots: ["SLOT"], invalid_slots: [] }
+     * Использует SLOT_VALIDATION DataComponent для установки валидных слотов
      */
     public static ItemStack createForCreativeTab(BaseAccessoryItem item) {
         // Используем PRIMARY slot (первый в списке совместимых)
