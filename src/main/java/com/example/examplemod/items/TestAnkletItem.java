@@ -6,7 +6,7 @@ import io.wispforest.accessories.api.Accessory;
 import io.wispforest.accessories.api.slot.SlotReference;
 
 /**
- * Тестовый предмет с прямым добавлением NBT тега anklet
+ * Тестовый предмет с прямым добавлением слота anklet через SLOT_VALIDATION DataComponent
  */
 public class TestAnkletItem extends Item implements Accessory {
     
