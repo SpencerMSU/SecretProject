@@ -2,11 +2,6 @@ package com.example.examplemod.items;
 
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.world.item.component.CustomData;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.StringTag;
 import io.wispforest.accessories.api.Accessory;
 import io.wispforest.accessories.api.slot.SlotReference;
 
@@ -25,27 +20,43 @@ public class TestAnkletItem extends Item implements Accessory {
         System.out.println("TestAnkletItem getDefaultInstance called!");
         ItemStack stack = super.getDefaultInstance();
         
-        // ПРАВИЛЬНАЯ структура NBT для Accessories мода!
-        CompoundTag mainTag = new CompoundTag();
-        CompoundTag slotValidation = new CompoundTag();
-        
-        // Список валидных слотов
-        ListTag validSlots = new ListTag();
-        validSlots.add(StringTag.valueOf("anklet"));
-        slotValidation.put("valid_slots", validSlots);
-        
-        // Список невалидных слотов (пустой)
-        ListTag invalidSlots = new ListTag();
-        slotValidation.put("invalid_slots", invalidSlots);
-        
-        // Добавляем в главный тег
-        mainTag.put("accessories:slot_validation", slotValidation);
-        
-        CustomData customData = CustomData.of(mainTag);
-        stack.set(DataComponents.CUSTOM_DATA, customData);
-        
-        System.out.println("TestAnkletItem NBT set: " + mainTag.toString());
-        System.out.println("TestAnkletItem CustomData: " + stack.get(DataComponents.CUSTOM_DATA));
+        // ВАЖНО! Accessories мод ищет тег НА УРОВНЕ КОМПОНЕНТОВ, а не в custom_data!
+        // Используем специальный DataComponent от мода Accessories
+        try {
+            // Получаем класс AccessoriesDataComponents
+            Class<?> dataComponentsClass = Class.forName("io.wispforest.accessories.api.AccessoriesDataComponents");
+            
+            // Получаем поле SLOT_VALIDATION
+            java.lang.reflect.Field slotValidationField = dataComponentsClass.getDeclaredField("SLOT_VALIDATION");
+            slotValidationField.setAccessible(true);
+            
+            @SuppressWarnings("unchecked")
+            net.minecraft.core.component.DataComponentType<Object> slotValidationType = 
+                (net.minecraft.core.component.DataComponentType<Object>) slotValidationField.get(null);
+            
+            // Создаем SlotValidation с нужным слотом
+            java.util.Set<String> validSlots = new java.util.HashSet<>();
+            validSlots.add("anklet");
+            java.util.Set<String> invalidSlots = new java.util.HashSet<>();
+            
+            // Получаем конструктор SlotValidation
+            Class<?> slotValidationClass = Class.forName("io.wispforest.accessories.api.data.SlotValidation");
+            java.lang.reflect.Constructor<?> constructor = slotValidationClass.getDeclaredConstructor(java.util.Set.class, java.util.Set.class);
+            constructor.setAccessible(true);
+            
+            Object slotValidation = constructor.newInstance(validSlots, invalidSlots);
+            
+            // Устанавливаем компонент
+            @SuppressWarnings("unchecked")
+            net.minecraft.core.component.DataComponentType rawType = (net.minecraft.core.component.DataComponentType) slotValidationType;
+            stack.set(rawType, slotValidation);
+            
+            System.out.println("TestAnkletItem SLOT_VALIDATION DataComponent set successfully!");
+            
+        } catch (Exception e) {
+            System.err.println("ERROR: Failed to set SlotValidation component!");
+            e.printStackTrace();
+        }
         
         return stack;
     }

@@ -52,31 +52,14 @@ public abstract class BaseAccessoryItem extends Item implements Accessory {
     }
     
     /**
-     * Применить дефолтные NBT данные к Properties
+     * Применить дефолтные настройки к Properties
+     * Примечание: Slot validation теперь устанавливается через DataComponent в getDefaultInstance()
      */
     private static Properties applyDefaultNBT(Properties properties, AccessoryType type) {
-        // ПРАВИЛЬНАЯ структура NBT для Accessories мода!
-        net.minecraft.nbt.CompoundTag mainTag = new net.minecraft.nbt.CompoundTag();
-        net.minecraft.nbt.CompoundTag slotValidation = new net.minecraft.nbt.CompoundTag();
-        
-        // Список валидных слотов
-        ListTag validSlotsList = new ListTag();
-        for (String slot : type.getCompatibleSlots()) {
-            validSlotsList.add(net.minecraft.nbt.StringTag.valueOf(slot));
-        }
-        slotValidation.put("valid_slots", validSlotsList);
-        
-        // Список невалидных слотов (пустой)
-        ListTag invalidSlotsList = new ListTag();
-        slotValidation.put("invalid_slots", invalidSlotsList);
-        
-        // Добавляем в главный тег
-        mainTag.put("accessories:slot_validation", slotValidation);
-        
-        CustomData customData = CustomData.of(mainTag);
-        System.out.println("Applying default NBT to Properties for " + type + ": " + mainTag.toString());
-        
-        return properties.component(DataComponents.CUSTOM_DATA, customData);
+        System.out.println("Applying default properties for " + type);
+        // Аксессуары больше не используют NBT для slot validation
+        // Вместо этого используется SLOT_VALIDATION DataComponent
+        return properties;
     }
     
     @Override
@@ -89,35 +72,48 @@ public abstract class BaseAccessoryItem extends Item implements Accessory {
         
         ItemStack stack = super.getDefaultInstance();
         
-        // Проверяем, есть ли уже NBT
-        CustomData existing = stack.get(DataComponents.CUSTOM_DATA);
-        System.out.println("Existing NBT BEFORE: " + (existing != null ? existing.copyTag() : "null"));
-        
-        // ВСЕГДА перезаписываем NBT с правильной структурой!
-        // ПРАВИЛЬНАЯ структура NBT для Accessories мода!
-        net.minecraft.nbt.CompoundTag mainTag = new net.minecraft.nbt.CompoundTag();
-        net.minecraft.nbt.CompoundTag slotValidation = new net.minecraft.nbt.CompoundTag();
-        
-        // Список валидных слотов
-        ListTag validSlotsList = new ListTag();
-        for (String slot : accessoryType.getCompatibleSlots()) {
-            validSlotsList.add(net.minecraft.nbt.StringTag.valueOf(slot));
-            System.out.println("  Adding valid slot: " + slot);
+        // ВАЖНО! Accessories мод ищет тег НА УРОВНЕ КОМПОНЕНТОВ, а не в custom_data!
+        // Используем специальный DataComponent от мода Accessories
+        try {
+            // Получаем класс AccessoriesDataComponents
+            Class<?> dataComponentsClass = Class.forName("io.wispforest.accessories.api.AccessoriesDataComponents");
+            
+            // Получаем поле SLOT_VALIDATION
+            java.lang.reflect.Field slotValidationField = dataComponentsClass.getDeclaredField("SLOT_VALIDATION");
+            slotValidationField.setAccessible(true);
+            
+            @SuppressWarnings("unchecked")
+            net.minecraft.core.component.DataComponentType<Object> slotValidationType = 
+                (net.minecraft.core.component.DataComponentType<Object>) slotValidationField.get(null);
+            
+            // Создаем SlotValidation с совместимыми слотами
+            java.util.Set<String> validSlots = new java.util.HashSet<>();
+            for (String slot : accessoryType.getCompatibleSlots()) {
+                validSlots.add(slot);
+                System.out.println("  Adding valid slot: " + slot);
+            }
+            java.util.Set<String> invalidSlots = new java.util.HashSet<>();
+            
+            // Получаем конструктор SlotValidation
+            Class<?> slotValidationClass = Class.forName("io.wispforest.accessories.api.data.SlotValidation");
+            java.lang.reflect.Constructor<?> constructor = slotValidationClass.getDeclaredConstructor(java.util.Set.class, java.util.Set.class);
+            constructor.setAccessible(true);
+            
+            Object slotValidation = constructor.newInstance(validSlots, invalidSlots);
+            
+            // Устанавливаем компонент
+            @SuppressWarnings("unchecked")
+            net.minecraft.core.component.DataComponentType rawType = (net.minecraft.core.component.DataComponentType) slotValidationType;
+            stack.set(rawType, slotValidation);
+            
+            System.out.println("  SlotValidation DataComponent successfully set!");
+            System.out.println("  Valid slots: " + validSlots);
+            
+        } catch (Exception e) {
+            System.err.println("ERROR: Failed to set SlotValidation component!");
+            e.printStackTrace();
         }
-        slotValidation.put("valid_slots", validSlotsList);
         
-        // Список невалидных слотов (пустой)
-        ListTag invalidSlotsList = new ListTag();
-        slotValidation.put("invalid_slots", invalidSlotsList);
-        
-        // Добавляем в главный тег
-        mainTag.put("accessories:slot_validation", slotValidation);
-        
-        CustomData customData = CustomData.of(mainTag);
-        stack.set(DataComponents.CUSTOM_DATA, customData);
-        
-        System.out.println("Applied NBT: " + mainTag.toString());
-        System.out.println("Final NBT AFTER: " + stack.get(DataComponents.CUSTOM_DATA).copyTag());
         System.out.println(">>> getDefaultInstance() FINISHED <<<");
         System.out.println("========================================");
         
