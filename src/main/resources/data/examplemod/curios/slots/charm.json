@@ -3,5 +3,7 @@
   "order": 50,
   "icon": "curios:slot/empty_charm_slot",
   "replace": false,
-  "operation": "SET"
+  "operation": "SET",
+  "use_native_gui": true,
+  "render_toggle": true
 }

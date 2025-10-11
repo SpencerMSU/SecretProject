@@ -1,7 +1,9 @@
 {
-  "size": 3,
+  "size": 2,
   "order": 10,
   "icon": "curios:slot/empty_ring_slot",
   "replace": false,
-  "operation": "SET"
+  "operation": "SET",
+  "use_native_gui": true,
+  "render_toggle": true
 }
