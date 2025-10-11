@@ -24,8 +24,8 @@ repositories {
         url = "https://maven.neoforged.net/releases/"
     }
     maven {
-        name = "Curios Maven"
-        url = "https://maven.theillusivec4.top/"
+        name = "Wispforest Maven"
+        url = "https://maven.wispforest.io"
     }
 }
 
@@ -121,9 +121,8 @@ configurations {
 }
 
 dependencies {
-    // Curios API dependency for accessories
-    compileOnly "top.theillusivec4.curios:curios-neoforge:9.5.1+1.21.1:api"
-    localRuntime "top.theillusivec4.curios:curios-neoforge:9.5.1+1.21.1"
+    // Accessories API dependency for accessories
+    implementation "io.wispforest:accessories-neoforge:1.1.0-beta.52+1.21.1"
     
     // Example optional mod dependency with JEI
     // The JEI API is declared for compile time use, while the full JEI artifact is used at runtime

@@ -95,5 +95,13 @@
   "spell.examplemod.ocean_guardian": "Страж океана",
   "spell.examplemod.ocean_guardian.desc": "Призови древнего стража для защиты и атаки",
   "spell.examplemod.absolute_zero": "Абсолютный ноль",
-  "spell.examplemod.absolute_zero.desc": "Останови само время ледяной бурей космического холода"
+  "spell.examplemod.absolute_zero.desc": "Останови само время ледяной бурей космического холода",
+  
+  "_comment": "Слоты аксессуаров (Accessories)",
+  "accessories.slot.ring": "Кольцо",
+  "accessories.slot.necklace": "Ожерелье",
+  "accessories.slot.bracelet": "Браслет", 
+  "accessories.slot.belt": "Пояс",
+  "accessories.slot.charm": "Амулет",
+  "accessories.slot.back": "Спина"
 }

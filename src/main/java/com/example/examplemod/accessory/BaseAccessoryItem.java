@@ -1,5 +1,7 @@
 package com.example.examplemod.accessory;
 
+import io.wispforest.accessories.api.slot.SlotReference;
+import io.wispforest.accessories.api.Accessory;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
@@ -8,8 +10,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.CustomData;
 import net.neoforged.neoforge.common.util.Lazy;
-import top.theillusivec4.curios.api.SlotContext;
-import top.theillusivec4.curios.api.type.capability.ICurioItem;
 
 import java.util.List;
 
@@ -17,7 +17,7 @@ import java.util.List;
  * Базовый класс для всех аксессуаров
  * Поддерживает: уровни прокачки (1-10), редкость, NBT данные
  */
-public abstract class BaseAccessoryItem extends Item implements ICurioItem {
+public abstract class BaseAccessoryItem extends Item implements Accessory {
     protected final AccessoryType accessoryType;
     protected final AccessoryElement element;
     protected final Lazy<AccessoryStats> baseStats;
@@ -230,35 +230,30 @@ public abstract class BaseAccessoryItem extends Item implements ICurioItem {
             .withStyle(style -> style.withColor(rarity.getColor()));
     }
 
-    // Curios API методы
+    // Accessories API методы
     @Override
-    public boolean canEquipFromUse(SlotContext slotContext, ItemStack stack) {
-        return true;
-    }
-    
-    @Override
-    public void curioTick(SlotContext slotContext, ItemStack stack) {
-        // Аксессуар работает в слоте
-    }
-    
-    @Override
-    public void onEquip(SlotContext slotContext, ItemStack prevStack, ItemStack stack) {
+    public void onEquip(ItemStack stack, SlotReference reference) {
         // Аксессуар экипирован
     }
     
     @Override
-    public void onUnequip(SlotContext slotContext, ItemStack newStack, ItemStack stack) {
+    public void onUnequip(ItemStack stack, SlotReference reference) {
         // Аксессуар снят
     }
     
     @Override
-    public boolean canEquip(SlotContext slotContext, ItemStack stack) {
-        // Проверяем, подходит ли аксессуар для этого слота
-        return slotContext.identifier().equals(accessoryType.getCuriosSlot());
+    public void tick(ItemStack stack, SlotReference reference) {
+        // Аксессуар работает в слоте
     }
     
     @Override
-    public boolean canUnequip(SlotContext slotContext, ItemStack stack) {
+    public boolean canEquip(ItemStack stack, SlotReference reference) {
+        // Проверяем, подходит ли аксессуар для этого слота
+        return reference.slotName().equals(accessoryType.getSlotName());
+    }
+    
+    @Override
+    public boolean canUnequip(ItemStack stack, SlotReference reference) {
         return true;
     }
 }

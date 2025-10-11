@@ -12,7 +12,7 @@ public class ModCommands {
     public static void onRegisterCommands(RegisterCommandsEvent event) {
         GiveAccessoryCommand.register(event.getDispatcher());
         ManaCommand.register(event.getDispatcher());
-        CuriosTestCommand.register(event.getDispatcher());
+        CheckModsCommand.register(event.getDispatcher());
         ModListCommand.register(event.getDispatcher());
     }
 }

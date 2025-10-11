@@ -83,5 +83,13 @@
   "spell.examplemod.ocean_guardian": "Ocean Guardian",
   "spell.examplemod.ocean_guardian.desc": "Summon an ancient guardian for protection and attack",
   "spell.examplemod.absolute_zero": "Absolute Zero",
-  "spell.examplemod.absolute_zero.desc": "Stop time itself with an ice storm of cosmic cold"
+  "spell.examplemod.absolute_zero.desc": "Stop time itself with an ice storm of cosmic cold",
+  
+  "_comment": "Accessories Slots",
+  "accessories.slot.ring": "Ring",
+  "accessories.slot.necklace": "Necklace", 
+  "accessories.slot.bracelet": "Bracelet",
+  "accessories.slot.belt": "Belt",
+  "accessories.slot.charm": "Charm",
+  "accessories.slot.back": "Back"
 }
