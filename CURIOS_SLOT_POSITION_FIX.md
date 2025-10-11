@@ -65,7 +65,7 @@ According to the official Curios API documentation, to correctly display slots y
 5. ✅ `charm.json` - 1 слот, порядок 50
 6. ✅ `back.json` - 1 слот, порядок 60
 
-**Итого: 8 слотов** (2 кольца + 6 других типов)
+**Итого: 7 слотов** (2 кольца + 5 других типов)
 
 ## Параметры конфигурации (Configuration Parameters)
 
@@ -100,7 +100,7 @@ According to the official Curios API documentation, to correctly display slots y
    ```
    /curiostest
    ```
-   Должен вывести: "Curios API работает! Доступно слотов: 8"
+   Должен вывести: "Curios API работает! Доступно слотов: 7"
 
 ## Структура слотов (Slot Structure)
 
