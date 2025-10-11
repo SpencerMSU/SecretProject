@@ -1,5 +1,9 @@
 {
-  "order": 30,
-  "amount": 1,
-  "icon": "accessories:gui/slot/wrist"
+  "slots": [
+    {
+      "id": "bracelet",
+      "order": 30,
+      "size": 1
+    }
+  ]
 }

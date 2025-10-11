@@ -1,5 +1,9 @@
 {
-  "order": 60,
-  "amount": 1,
-  "icon": "accessories:gui/slot/back"
+  "slots": [
+    {
+      "id": "back",
+      "order": 60,
+      "size": 1
+    }
+  ]
 }

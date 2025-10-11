@@ -1,5 +1,9 @@
 {
-  "order": 50,
-  "amount": 1,
-  "icon": "accessories:gui/slot/charm"
+  "slots": [
+    {
+      "id": "charm",
+      "order": 50,
+      "size": 1
+    }
+  ]
 }

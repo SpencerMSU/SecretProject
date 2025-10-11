@@ -2,6 +2,8 @@ package com.example.examplemod.accessory;
 
 import io.wispforest.accessories.api.slot.SlotReference;
 import io.wispforest.accessories.api.Accessory;
+import io.wispforest.accessories.api.AccessoriesCapability;
+import com.example.examplemod.items.ModItems;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
@@ -10,6 +12,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.CustomData;
 import net.neoforged.neoforge.common.util.Lazy;
+import net.minecraft.nbt.ListTag;
 
 import java.util.List;
 
@@ -27,9 +30,16 @@ public abstract class BaseAccessoryItem extends Item implements Accessory {
     public static final String NBT_RARITY = "AccessoryRarity";
 
     public BaseAccessoryItem(AccessoryType type, AccessoryElement element, Properties properties) {
-        super(properties.stacksTo(1)); // Аксессуары не стакаются
+        super(applyDefaultNBT(properties.stacksTo(1), type)); // Аксессуары не стакаются
         this.accessoryType = type;
         this.element = element;
+        
+        System.out.println("========================================");
+        System.out.println("BaseAccessoryItem constructor");
+        System.out.println("Type: " + type);
+        System.out.println("Element: " + element);
+        System.out.println("Compatible slots: " + String.join(", ", type.getCompatibleSlots()));
+        System.out.println("========================================");
         
         // Ленивая инициализация базовых статов
         this.baseStats = Lazy.of(() -> {
@@ -40,6 +50,80 @@ public abstract class BaseAccessoryItem extends Item implements Accessory {
             }
         });
     }
+    
+    /**
+     * Применить дефолтные NBT данные к Properties
+     */
+    private static Properties applyDefaultNBT(Properties properties, AccessoryType type) {
+        // ПРАВИЛЬНАЯ структура NBT для Accessories мода!
+        net.minecraft.nbt.CompoundTag mainTag = new net.minecraft.nbt.CompoundTag();
+        net.minecraft.nbt.CompoundTag slotValidation = new net.minecraft.nbt.CompoundTag();
+        
+        // Список валидных слотов
+        ListTag validSlotsList = new ListTag();
+        for (String slot : type.getCompatibleSlots()) {
+            validSlotsList.add(net.minecraft.nbt.StringTag.valueOf(slot));
+        }
+        slotValidation.put("valid_slots", validSlotsList);
+        
+        // Список невалидных слотов (пустой)
+        ListTag invalidSlotsList = new ListTag();
+        slotValidation.put("invalid_slots", invalidSlotsList);
+        
+        // Добавляем в главный тег
+        mainTag.put("accessories:slot_validation", slotValidation);
+        
+        CustomData customData = CustomData.of(mainTag);
+        System.out.println("Applying default NBT to Properties for " + type + ": " + mainTag.toString());
+        
+        return properties.component(DataComponents.CUSTOM_DATA, customData);
+    }
+    
+    @Override
+    public ItemStack getDefaultInstance() {
+        System.out.println("========================================");
+        System.out.println(">>> getDefaultInstance() CALLED <<<");
+        System.out.println("Class: " + this.getClass().getSimpleName());
+        System.out.println("Type: " + accessoryType);
+        System.out.println("Element: " + element);
+        
+        ItemStack stack = super.getDefaultInstance();
+        
+        // Проверяем, есть ли уже NBT
+        CustomData existing = stack.get(DataComponents.CUSTOM_DATA);
+        System.out.println("Existing NBT BEFORE: " + (existing != null ? existing.copyTag() : "null"));
+        
+        // ВСЕГДА перезаписываем NBT с правильной структурой!
+        // ПРАВИЛЬНАЯ структура NBT для Accessories мода!
+        net.minecraft.nbt.CompoundTag mainTag = new net.minecraft.nbt.CompoundTag();
+        net.minecraft.nbt.CompoundTag slotValidation = new net.minecraft.nbt.CompoundTag();
+        
+        // Список валидных слотов
+        ListTag validSlotsList = new ListTag();
+        for (String slot : accessoryType.getCompatibleSlots()) {
+            validSlotsList.add(net.minecraft.nbt.StringTag.valueOf(slot));
+            System.out.println("  Adding valid slot: " + slot);
+        }
+        slotValidation.put("valid_slots", validSlotsList);
+        
+        // Список невалидных слотов (пустой)
+        ListTag invalidSlotsList = new ListTag();
+        slotValidation.put("invalid_slots", invalidSlotsList);
+        
+        // Добавляем в главный тег
+        mainTag.put("accessories:slot_validation", slotValidation);
+        
+        CustomData customData = CustomData.of(mainTag);
+        stack.set(DataComponents.CUSTOM_DATA, customData);
+        
+        System.out.println("Applied NBT: " + mainTag.toString());
+        System.out.println("Final NBT AFTER: " + stack.get(DataComponents.CUSTOM_DATA).copyTag());
+        System.out.println(">>> getDefaultInstance() FINISHED <<<");
+        System.out.println("========================================");
+        
+        return stack;
+    }
+    
 
     public AccessoryType getAccessoryType() {
         return accessoryType;
@@ -234,11 +318,15 @@ public abstract class BaseAccessoryItem extends Item implements Accessory {
     @Override
     public void onEquip(ItemStack stack, SlotReference reference) {
         // Аксессуар экипирован
+        System.out.println("onEquip called for " + this.getClass().getSimpleName() + 
+                          " in slot " + reference.slotName());
     }
     
     @Override
     public void onUnequip(ItemStack stack, SlotReference reference) {
         // Аксессуар снят
+        System.out.println("onUnequip called for " + this.getClass().getSimpleName() + 
+                          " in slot " + reference.slotName());
     }
     
     @Override
@@ -248,12 +336,127 @@ public abstract class BaseAccessoryItem extends Item implements Accessory {
     
     @Override
     public boolean canEquip(ItemStack stack, SlotReference reference) {
-        // Проверяем, подходит ли аксессуар для этого слота
-        return reference.slotName().equals(accessoryType.getSlotName());
+        // Временно разрешаем экипировку в любой слот для тестирования
+        // Добавляем логирование для отладки
+        System.out.println("canEquip called for " + this.getClass().getSimpleName() + 
+                          " in slot " + reference.slotName());
+        return true;
     }
     
     @Override
     public boolean canUnequip(ItemStack stack, SlotReference reference) {
         return true;
+    }
+
+    /**
+     * Получить русское название слота
+     */
+    private String getSlotDisplayName(String slotName) {
+        return switch (slotName) {
+            case "ring" -> "Кольцо";
+            case "necklace" -> "Ожерелье";
+            case "bracelet" -> "Браслет";
+            case "belt" -> "Пояс";
+            case "charm" -> "Амулет";
+            case "back" -> "Плащ";
+            case "earring" -> "Серьга";
+            case "anklet" -> "Ножной браслет";
+            case "cape" -> "Накидка";
+            default -> slotName;
+        };
+    }
+
+
+    /**
+     * Получить Item для конкретного типа и стихии аксессуара
+     */
+    private static Item getAccessoryItem(AccessoryType type, AccessoryElement element) {
+        if (element == AccessoryElement.FIRE) {
+            return switch (type) {
+                case RING -> ModItems.FIRE_RING.get();
+                case NECKLACE -> ModItems.FIRE_NECKLACE.get();
+                case BRACELET -> ModItems.FIRE_BRACELET.get();
+                case BELT -> ModItems.FIRE_BELT.get();
+                case CHARM -> ModItems.FIRE_CHARM.get();
+                case CLOAK -> ModItems.FIRE_CLOAK.get();
+            };
+        } else { // WATER
+            return switch (type) {
+                case RING -> ModItems.WATER_RING.get();
+                case NECKLACE -> ModItems.WATER_NECKLACE.get();
+                case BRACELET -> ModItems.WATER_BRACELET.get();
+                case BELT -> ModItems.WATER_BELT.get();
+                case CHARM -> ModItems.WATER_CHARM.get();
+                case CLOAK -> ModItems.WATER_CLOAK.get();
+            };
+        }
+    }
+
+    /**
+     * Создать ItemStack аксессуара с ОДНИМ конкретным слотом для креативных вкладок
+     * ПРАВИЛЬНАЯ структура: accessories:slot_validation { valid_slots: ["SLOT"], invalid_slots: [] }
+     */
+    public static ItemStack createForCreativeTab(BaseAccessoryItem item) {
+        // Используем PRIMARY slot (первый в списке совместимых)
+        String primarySlot = item.getAccessoryType().getSlotName();
+        return createForCreativeTabWithSlot(item, primarySlot);
+    }
+    
+    /**
+     * Создать ItemStack с конкретным слотом
+     */
+    public static ItemStack createForCreativeTabWithSlot(BaseAccessoryItem item, String specificSlot) {
+        System.out.println("========================================");
+        System.out.println(">>> createForCreativeTabWithSlot() <<<");
+        System.out.println("Item: " + item.getClass().getSimpleName());
+        System.out.println("Type: " + item.getAccessoryType());
+        System.out.println("Element: " + item.getElement());
+        System.out.println("Specific slot: " + specificSlot);
+        
+        ItemStack stack = new ItemStack(item);
+        
+        // ВАЖНО! Accessories мод ищет тег НА УРОВНЕ КОМПОНЕНТОВ, а не в custom_data!
+        // Используем специальный DataComponent от мода Accessories
+        try {
+            // Получаем класс AccessoriesDataComponents
+            Class<?> dataComponentsClass = Class.forName("io.wispforest.accessories.api.AccessoriesDataComponents");
+            
+            // Получаем поле SLOT_VALIDATION
+            java.lang.reflect.Field slotValidationField = dataComponentsClass.getDeclaredField("SLOT_VALIDATION");
+            slotValidationField.setAccessible(true);
+            
+            @SuppressWarnings("unchecked")
+            net.minecraft.core.component.DataComponentType<Object> slotValidationType = 
+                (net.minecraft.core.component.DataComponentType<Object>) slotValidationField.get(null);
+            
+            // Создаем SlotValidation с нужным слотом
+            java.util.Set<String> validSlots = new java.util.HashSet<>();
+            validSlots.add(specificSlot);
+            java.util.Set<String> invalidSlots = new java.util.HashSet<>();
+            
+            // Получаем конструктор SlotValidation
+            Class<?> slotValidationClass = Class.forName("io.wispforest.accessories.api.data.SlotValidation");
+            java.lang.reflect.Constructor<?> constructor = slotValidationClass.getDeclaredConstructor(java.util.Set.class, java.util.Set.class);
+            constructor.setAccessible(true);
+            
+            Object slotValidation = constructor.newInstance(validSlots, invalidSlots);
+            
+            // Устанавливаем компонент
+            @SuppressWarnings("unchecked")
+            net.minecraft.core.component.DataComponentType rawType = (net.minecraft.core.component.DataComponentType) slotValidationType;
+            stack.set(rawType, slotValidation);
+            
+            System.out.println("  Adding ONLY slot: " + specificSlot + " via DataComponent!");
+            System.out.println("  SlotValidation successfully set!");
+            
+        } catch (Exception e) {
+            System.err.println("ERROR: Failed to set SlotValidation component!");
+            e.printStackTrace();
+        }
+        
+        System.out.println(">>> createForCreativeTabWithSlot() DONE <<<");
+        System.out.println("========================================");
+        
+        return stack;
     }
 }

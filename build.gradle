@@ -27,6 +27,18 @@ repositories {
         name = "Wispforest Maven"
         url = "https://maven.wispforest.io"
     }
+    maven {
+        name = "CurseMaven"
+        url = "https://cursemaven.com"
+    }
+    maven {
+        name = "Modrinth Maven"
+        url = "https://api.modrinth.com/maven"
+    }
+    maven {
+        name = "Su5ed Maven"
+        url = "https://maven.su5ed.dev/releases"
+    }
 }
 
 base {
@@ -121,9 +133,11 @@ configurations {
 }
 
 dependencies {
+    // Forgified Fabric API dependency (specific version required by Wispforest Accessories)
+    implementation "org.sinytra.forgified-fabric-api:fabric-api-base:0.4.42+d1308dedd1"
+    
     // Accessories API dependency for accessories
     implementation "io.wispforest:accessories-neoforge:1.1.0-beta.52+1.21.1"
-    
     // Example optional mod dependency with JEI
     // The JEI API is declared for compile time use, while the full JEI artifact is used at runtime
     // compileOnly "mezz.jei:jei-${mc_version}-common-api:${jei_version}"

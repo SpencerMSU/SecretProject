@@ -2,6 +2,7 @@ package com.example.examplemod;
 
 import com.example.examplemod.blocks.ModBlocks;
 import com.example.examplemod.items.ModItems;
+import com.example.examplemod.items.ModCreativeTabs;
 import org.slf4j.Logger;
 
 import com.mojang.logging.LogUtils;
@@ -32,6 +33,7 @@ public class ExampleMod {
 
         ModBlocks.register(modEventBus);
         ModItems.register(modEventBus);
+        ModCreativeTabs.register(modEventBus);
         com.example.examplemod.recipe.ModRecipes.register(modEventBus);
 
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);

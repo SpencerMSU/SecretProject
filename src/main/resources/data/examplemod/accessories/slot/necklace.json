@@ -1,5 +1,9 @@
 {
-  "order": 20,
-  "amount": 1,
-  "icon": "accessories:gui/slot/necklace"
+  "slots": [
+    {
+      "id": "necklace",
+      "order": 20,
+      "size": 1
+    }
+  ]
 }

@@ -16,8 +16,8 @@ import java.util.List;
 @OnlyIn(net.neoforged.api.distmarker.Dist.CLIENT)
 public class SpellBookScreen extends Screen {
     private static final int PADDING = 8;
-    private static final int SLOT_SIZE = 32; // Увеличиваем размер слотов
-    private static final int SLOT_GAP = 4;   // Увеличиваем промежутки
+    private static final int SLOT_SIZE = 20; // Уменьшил размер слотов для оконного режима
+    private static final int SLOT_GAP = 2;   // Уменьшил промежутки для компактности
 
     private SpellEntry dragging;
     private int scrollOffset = 0;
@@ -82,7 +82,7 @@ public class SpellBookScreen extends Screen {
                        leftPanelRight - leftPanelLeft - innerPadding * 2, 
                        leftPanelBottom - leftPanelTop - innerPadding * 2);
 
-        // Right panel: active hotbar slots vertically
+        // Right panel: active hotbar slots vertically (smaller slots)
         int rightPanelLeft = midX + panelPadding;
         int rightPanelTop = leftPanelTop;
         int rightPanelRight = w - PADDING;
@@ -196,6 +196,7 @@ public class SpellBookScreen extends Screen {
             drawSlot(g, sx, sy + i * (SLOT_SIZE + SLOT_GAP), ClientSpellState.getHotbarEntry(i));
         }
     }
+    
 
     private void drawSlot(GuiGraphics g, int x, int y, int slotSize, SpellEntry entry) {
         // Draw slot with rarity-colored border
