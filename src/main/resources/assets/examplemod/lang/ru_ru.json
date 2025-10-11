@@ -89,19 +89,11 @@
   "spell.examplemod.absolute_zero": "Абсолютный ноль",
   "spell.examplemod.absolute_zero.desc": "Останови само время ледяной бурей космического холода",
   
-  "_comment": "Слоты Curios",
-  "curios.identifier.ring": "Кольцо",
-  "curios.identifier.necklace": "Ожерелье",
-  "curios.identifier.bracelet": "Браслет", 
-  "curios.identifier.belt": "Пояс",
-  "curios.identifier.charm": "Амулет",
-  "curios.identifier.back": "Спина",
-  
-  "_comment": "Тестовые предметы Curios",
-  "item.examplemod.test_ring": "Тестовое кольцо",
-  "item.examplemod.test_necklace": "Тестовое ожерелье",
-  "item.examplemod.test_bracelet": "Тестовый браслет",
-  "item.examplemod.test_belt": "Тестовый пояс",
-  "item.examplemod.test_charm": "Тестовый амулет",
-  "item.examplemod.test_cloak": "Тестовый плащ"
+  "_comment": "Слоты аксессуаров (Accessories)",
+  "accessories.slot.ring": "Кольцо",
+  "accessories.slot.necklace": "Ожерелье",
+  "accessories.slot.bracelet": "Браслет", 
+  "accessories.slot.belt": "Пояс",
+  "accessories.slot.charm": "Амулет",
+  "accessories.slot.back": "Спина"
 }
