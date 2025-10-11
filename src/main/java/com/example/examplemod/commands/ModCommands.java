@@ -13,6 +13,10 @@ public class ModCommands {
         GiveAccessoryCommand.register(event.getDispatcher());
         ManaCommand.register(event.getDispatcher());
         CuriosTestCommand.register(event.getDispatcher());
+        CheckSlotsCommand.register(event.getDispatcher());
+        CheckModsCommand.register(event.getDispatcher());
+        GiveTestCuriosCommand.register(event.getDispatcher());
+        InitCuriosCommand.register(event.getDispatcher());
         ModListCommand.register(event.getDispatcher());
     }
 }

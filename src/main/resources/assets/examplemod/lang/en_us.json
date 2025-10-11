@@ -75,5 +75,21 @@
   "spell.examplemod.ocean_guardian": "Ocean Guardian",
   "spell.examplemod.ocean_guardian.desc": "Summon an ancient guardian for protection and attack",
   "spell.examplemod.absolute_zero": "Absolute Zero",
-  "spell.examplemod.absolute_zero.desc": "Stop time itself with an ice storm of cosmic cold"
+  "spell.examplemod.absolute_zero.desc": "Stop time itself with an ice storm of cosmic cold",
+  
+  "_comment": "Curios Slots",
+  "curios.identifier.ring": "Ring",
+  "curios.identifier.necklace": "Necklace", 
+  "curios.identifier.bracelet": "Bracelet",
+  "curios.identifier.belt": "Belt",
+  "curios.identifier.charm": "Charm",
+  "curios.identifier.back": "Back",
+  
+  "_comment": "Test Curios Items",
+  "item.examplemod.test_ring": "Test Ring",
+  "item.examplemod.test_necklace": "Test Necklace",
+  "item.examplemod.test_bracelet": "Test Bracelet",
+  "item.examplemod.test_belt": "Test Belt",
+  "item.examplemod.test_charm": "Test Charm",
+  "item.examplemod.test_cloak": "Test Cloak"
 }

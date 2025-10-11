@@ -1,0 +1,7 @@
+{
+  "size": 1,
+  "order": 50,
+  "icon": "curios:slot/empty_charm_slot",
+  "replace": false,
+  "operation": "SET"
+}
