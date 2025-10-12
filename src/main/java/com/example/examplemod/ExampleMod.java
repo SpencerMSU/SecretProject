@@ -1,8 +1,8 @@
 package com.example.examplemod;
 
 import com.example.examplemod.blocks.ModBlocks;
+import com.example.examplemod.items.CreativeTabHandler;
 import com.example.examplemod.items.ModItems;
-import com.example.examplemod.items.ModCreativeTabs;
 import org.slf4j.Logger;
 
 import com.mojang.logging.LogUtils;
@@ -24,7 +24,7 @@ import com.example.examplemod.network.NetworkHandler;
 @Mod(ExampleMod.MODID)
 public class ExampleMod {
     public static final String MODID = "examplemod";
-    private static final Logger LOGGER = LogUtils.getLogger();
+    public static final Logger LOGGER = LogUtils.getLogger();
 
     public ExampleMod(IEventBus modEventBus, ModContainer modContainer) {
         modEventBus.addListener(this::commonSetup);
@@ -33,7 +33,7 @@ public class ExampleMod {
 
         ModBlocks.register(modEventBus);
         ModItems.register(modEventBus);
-        ModCreativeTabs.register(modEventBus);
+        CreativeTabHandler.register(modEventBus);
         com.example.examplemod.recipe.ModRecipes.register(modEventBus);
 
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);

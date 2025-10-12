@@ -1,7 +1,6 @@
 package com.example.examplemod.items;
 
 import com.example.examplemod.ExampleMod;
-import com.example.examplemod.accessory.*;
 import net.minecraft.world.item.Item;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredItem;
@@ -18,85 +17,74 @@ public class ModItems {
     );
 
     // Огненные аксессуары
-    public static final DeferredItem<FireRingItem> FIRE_RING = ITEMS.registerItem(
-        "fire_ring",
-        FireRingItem::new,
-        new Item.Properties()
-    );
-
-    public static final DeferredItem<FireNecklaceItem> FIRE_NECKLACE = ITEMS.registerItem(
-        "fire_necklace",
-        FireNecklaceItem::new,
-        new Item.Properties()
-    );
-
-    public static final DeferredItem<FireBraceletItem> FIRE_BRACELET = ITEMS.registerItem(
-        "fire_bracelet",
-        FireBraceletItem::new,
-        new Item.Properties()
-    );
-
-    public static final DeferredItem<FireBeltItem> FIRE_BELT = ITEMS.registerItem(
-        "fire_belt",
-        FireBeltItem::new,
-        new Item.Properties()
-    );
-
-    public static final DeferredItem<FireCharmItem> FIRE_CHARM = ITEMS.registerItem(
+    public static final DeferredItem<Item> FIRE_CHARM = ITEMS.registerSimpleItem(
         "fire_charm",
-        FireCharmItem::new,
-        new Item.Properties()
+        new Item.Properties().stacksTo(1)
     );
 
-    public static final DeferredItem<FireCloakItem> FIRE_CLOAK = ITEMS.registerItem(
-        "fire_cloak",
-        FireCloakItem::new,
-        new Item.Properties()
+    public static final DeferredItem<Item> FIRE_MASK = ITEMS.registerSimpleItem(
+        "fire_mask",
+        new Item.Properties().stacksTo(1)
     );
 
-    // Водные аксессуары
-    public static final DeferredItem<WaterRingItem> WATER_RING = ITEMS.registerItem(
-        "water_ring",
-        WaterRingItem::new,
-        new Item.Properties()
+    public static final DeferredItem<Item> FIRE_HAT = ITEMS.registerSimpleItem(
+        "fire_hat",
+        new Item.Properties().stacksTo(1)
     );
 
-    public static final DeferredItem<WaterNecklaceItem> WATER_NECKLACE = ITEMS.registerItem(
-        "water_necklace",
-        WaterNecklaceItem::new,
-        new Item.Properties()
+    public static final DeferredItem<Item> FIRE_NECKLACE = ITEMS.registerSimpleItem(
+        "fire_necklace",
+        new Item.Properties().stacksTo(1)
     );
 
-    public static final DeferredItem<WaterBraceletItem> WATER_BRACELET = ITEMS.registerItem(
-        "water_bracelet",
-        WaterBraceletItem::new,
-        new Item.Properties()
+    public static final DeferredItem<Item> FIRE_CAPE = ITEMS.registerSimpleItem(
+        "fire_cape",
+        new Item.Properties().stacksTo(1)
     );
 
-    public static final DeferredItem<WaterBeltItem> WATER_BELT = ITEMS.registerItem(
-        "water_belt",
-        WaterBeltItem::new,
-        new Item.Properties()
+    public static final DeferredItem<Item> FIRE_BACK = ITEMS.registerSimpleItem(
+        "fire_back",
+        new Item.Properties().stacksTo(1)
     );
 
-    public static final DeferredItem<WaterCharmItem> WATER_CHARM = ITEMS.registerItem(
-        "water_charm",
-        WaterCharmItem::new,
-        new Item.Properties()
+    public static final DeferredItem<Item> FIRE_WRIST = ITEMS.registerSimpleItem(
+        "fire_wrist",
+        new Item.Properties().stacksTo(1)
     );
 
-    public static final DeferredItem<WaterCloakItem> WATER_CLOAK = ITEMS.registerItem(
-        "water_cloak",
-        WaterCloakItem::new,
-        new Item.Properties()
+    public static final DeferredItem<Item> FIRE_HAND_1 = ITEMS.registerSimpleItem(
+        "fire_hand_1",
+        new Item.Properties().stacksTo(1)
     );
 
+    public static final DeferredItem<Item> FIRE_HAND_2 = ITEMS.registerSimpleItem(
+        "fire_hand_2",
+        new Item.Properties().stacksTo(1)
+    );
 
-    // Тестовый предмет с тегом anklet
-    public static final DeferredItem<TestAnkletItem> TEST_ANKLET = ITEMS.registerItem(
-        "test_anklet",
-        TestAnkletItem::new,
-        new Item.Properties()
+    public static final DeferredItem<Item> FIRE_RING_1 = ITEMS.registerSimpleItem(
+        "fire_ring_1",
+        new Item.Properties().stacksTo(1)
+    );
+
+    public static final DeferredItem<Item> FIRE_RING_2 = ITEMS.registerSimpleItem(
+        "fire_ring_2",
+        new Item.Properties().stacksTo(1)
+    );
+
+    public static final DeferredItem<Item> FIRE_BELT = ITEMS.registerSimpleItem(
+        "fire_belt",
+        new Item.Properties().stacksTo(1)
+    );
+
+    public static final DeferredItem<Item> FIRE_ANKLET = ITEMS.registerSimpleItem(
+        "fire_anklet",
+        new Item.Properties().stacksTo(1)
+    );
+
+    public static final DeferredItem<Item> FIRE_SHOES = ITEMS.registerSimpleItem(
+        "fire_shoes",
+        new Item.Properties().stacksTo(1)
     );
 
     public static void register(IEventBus eventBus) {

@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:diamond",
+    "examplemod:fire_ring_1",
+    "examplemod:fire_ring_2"
+  ]
+}
+

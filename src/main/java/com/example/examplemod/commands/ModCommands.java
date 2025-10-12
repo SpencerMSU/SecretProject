@@ -10,7 +10,6 @@ public class ModCommands {
     
     @SubscribeEvent
     public static void onRegisterCommands(RegisterCommandsEvent event) {
-        GiveAccessoryCommand.register(event.getDispatcher());
         ManaCommand.register(event.getDispatcher());
         CheckModsCommand.register(event.getDispatcher());
         ModListCommand.register(event.getDispatcher());
