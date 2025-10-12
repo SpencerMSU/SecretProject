@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "EEE",
+    "EEE",
+    "EEE"
+  ],
+  "key": {
+    "E": {
+      "item": "examplemod:enchantment_stone"
+    }
+  },
+  "result": {
+    "id": "examplemod:rarity_upgrade_stone",
+    "count": 1
+  }
+}
+

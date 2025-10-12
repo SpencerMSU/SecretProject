@@ -7,8 +7,9 @@
   "curios.identifier.charm": "Амулет",
   "curios.identifier.back": "Спина",
   
-  "_comment": "Камень заточки",
+  "_comment": "Камни улучшения",
   "item.examplemod.enchantment_stone": "Камень заточки",
+  "item.examplemod.rarity_upgrade_stone": "Камень улучшения редкости",
   
   "_comment": "Огненные аксессуары",
   "item.examplemod.fire_charm": "Огненный амулет",
@@ -145,7 +146,20 @@
   "accessories.slot.cape": "Накидка",
   "accessories.slot.mask": "Маска",
   
+  "_comment": "Редкости аксессуаров",
+  "rarity.common": "Обычная",
+  "rarity.uncommon": "Необычная",
+  "rarity.rare": "Редкая",
+  "rarity.epic": "Эпическая",
+  "rarity.legendary": "Легендарная",
+  "rarity.mythical": "Мифическая",
+  "rarity.absolute": "Абсолютная",
+  
+  "_comment": "Кастомные эффекты",
+  "effect.examplemod.mana_regeneration": "Регенерация маны",
+  
   "_comment": "Вкладки креатива",
+  "itemGroup.examplemod.project_radiation": "ProjectRadiation",
   "itemGroup.examplemod.rings": "Кольца",
   "itemGroup.examplemod.necklaces": "Ожерелья",
   "itemGroup.examplemod.bracelets": "Браслеты",

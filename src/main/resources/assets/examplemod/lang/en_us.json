@@ -7,8 +7,9 @@
   "curios.identifier.charm": "Charm",
   "curios.identifier.back": "Back",
   
-  "_comment": "Enchantment Stone",
+  "_comment": "Upgrade Stones",
   "item.examplemod.enchantment_stone": "Enchantment Stone",
+  "item.examplemod.rarity_upgrade_stone": "Rarity Upgrade Stone",
   
   "_comment": "Fire Accessories",
   "item.examplemod.fire_charm": "Fire Charm",
@@ -141,7 +142,20 @@
   "accessories.slot.cape": "Cape",
   "accessories.slot.mask": "Mask",
   
+  "_comment": "Accessory Rarities",
+  "rarity.common": "Common",
+  "rarity.uncommon": "Uncommon",
+  "rarity.rare": "Rare",
+  "rarity.epic": "Epic",
+  "rarity.legendary": "Legendary",
+  "rarity.mythical": "Mythical",
+  "rarity.absolute": "Absolute",
+  
+  "_comment": "Custom Effects",
+  "effect.examplemod.mana_regeneration": "Mana Regeneration",
+  
   "_comment": "Creative Tabs",
+  "itemGroup.examplemod.project_radiation": "ProjectRadiation",
   "itemGroup.examplemod.rings": "Rings",
   "itemGroup.examplemod.necklaces": "Necklaces",
   "itemGroup.examplemod.bracelets": "Bracelets",

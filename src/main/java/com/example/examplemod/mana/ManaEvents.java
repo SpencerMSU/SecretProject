@@ -10,6 +10,8 @@ import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 @EventBusSubscriber
 public class ManaEvents {
+    // Отключено - теперь используется ManaSystem для регенерации маны
+    
     @SubscribeEvent
     public static void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
         if (event.getEntity() instanceof ServerPlayer sp) {
@@ -26,6 +28,8 @@ public class ManaEvents {
         }
     }
 
+    // Старая система регенерации отключена - теперь используется ManaSystem
+    /*
     private static int tickAccumulator;
 
     @SubscribeEvent
@@ -44,4 +48,5 @@ public class ManaEvents {
             }
         }
     }
+    */
 }

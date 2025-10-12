@@ -10,7 +10,7 @@ public class Mana implements IMana {
     private boolean regenManuallySet = false;
 
     public Mana() {
-        this.maxMana = 1000;
+        this.maxMana = 100;
         this.currentMana = this.maxMana;
         this.regenPerSecond = 1;
     }

@@ -19,7 +19,7 @@ public final class ManaProvider {
             this.player = player;
             // Initialize defaults if missing
             CompoundTag tag = ensureRoot();
-            if (!tag.contains("Max")) tag.putInt("Max", 1000);
+            if (!tag.contains("Max")) tag.putInt("Max", 100);
             if (!tag.contains("Current")) tag.putInt("Current", tag.getInt("Max"));
             if (!tag.contains("Regen")) tag.putInt("Regen", 1);
         }

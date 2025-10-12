@@ -1,8 +1,12 @@
 package com.example.examplemod;
 
+import com.example.examplemod.accessory.AccessoryConfig;
+import com.example.examplemod.accessory.ModDataComponents;
 import com.example.examplemod.blocks.ModBlocks;
+import com.example.examplemod.effects.ModEffects;
 import com.example.examplemod.items.CreativeTabHandler;
 import com.example.examplemod.items.ModItems;
+import com.example.examplemod.mana.ManaComponent;
 import org.slf4j.Logger;
 
 import com.mojang.logging.LogUtils;
@@ -33,16 +37,20 @@ public class ExampleMod {
 
         ModBlocks.register(modEventBus);
         ModItems.register(modEventBus);
+        ModEffects.register(modEventBus);
+        ManaComponent.register(modEventBus);
         CreativeTabHandler.register(modEventBus);
+        ModDataComponents.register(modEventBus);
         com.example.examplemod.recipe.ModRecipes.register(modEventBus);
 
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
+        modContainer.registerConfig(ModConfig.Type.COMMON, AccessoryConfig.SPEC, "examplemod-accessories.toml");
         // Client config (HUD etc.)
         modContainer.registerConfig(ModConfig.Type.CLIENT, com.example.examplemod.client.ClientConfig.SPEC);
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {
-
+        // Команды будут зарегистрированы через события
     }
 
     @SubscribeEvent

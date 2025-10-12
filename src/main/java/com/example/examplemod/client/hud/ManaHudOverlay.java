@@ -3,7 +3,7 @@ package com.example.examplemod.client.hud;
 import com.example.examplemod.client.ClientConfig;
 import com.example.examplemod.client.spell.ClientSpellState;
 import com.example.examplemod.spell.SpellEntry;
-import com.example.examplemod.mana.ManaProvider;
+import com.example.examplemod.mana.ManaSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
@@ -28,9 +28,8 @@ public class ManaHudOverlay {
 
         if (!ClientConfig.SHOW_MANA.get()) return;
 
-        var mana = ManaProvider.get(mc.player);
-        int current = mana.getCurrentMana();
-        int max = Math.max(mana.getMaxMana(), 1);
+        int current = ManaSystem.getCurrentMana(mc.player);
+        int max = Math.max(ManaSystem.getMaxMana(mc.player), 1);
 
         GuiGraphics g = event.getGuiGraphics();
         int screenWidth = mc.getWindow().getGuiScaledWidth();

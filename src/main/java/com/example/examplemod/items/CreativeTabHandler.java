@@ -15,6 +15,19 @@ public class CreativeTabHandler {
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = 
         DeferredRegister.create(Registries.CREATIVE_MODE_TAB, ExampleMod.MODID);
 
+    // Вкладка ProjectRadiation для камней улучшения
+    public static final Supplier<CreativeModeTab> PROJECT_RADIATION_TAB = CREATIVE_MODE_TABS.register("project_radiation",
+        () -> CreativeModeTab.builder()
+            .title(Component.translatable("itemGroup.examplemod.project_radiation"))
+            .icon(() -> new ItemStack(ModItems.ENCHANTMENT_STONE.get()))
+            .displayItems((parameters, output) -> {
+                output.accept(ModItems.ENCHANTMENT_STONE.get());
+                output.accept(ModItems.RARITY_UPGRADE_STONE.get());
+            })
+            .build()
+    );
+
+    // Вкладка огненных аксессуаров
     public static final Supplier<CreativeModeTab> FIRE_ACCESSORIES_TAB = CREATIVE_MODE_TABS.register("fire_accessories",
         () -> CreativeModeTab.builder()
             .title(Component.translatable("itemGroup.examplemod.fire_accessories"))
