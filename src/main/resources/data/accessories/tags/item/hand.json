@@ -2,7 +2,8 @@
   "replace": false,
   "values": [
     "examplemod:fire_hand_1",
-    "examplemod:fire_hand_2"
+    "examplemod:fire_hand_2",
+    "examplemod:water_hand_1",
+    "examplemod:water_hand_2"
   ]
 }
-

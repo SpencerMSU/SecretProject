@@ -1,7 +1,7 @@
 {
   "replace": false,
   "values": [
-    "examplemod:fire_wrist"
+    "examplemod:fire_wrist",
+    "examplemod:water_wrist"
   ]
 }
-

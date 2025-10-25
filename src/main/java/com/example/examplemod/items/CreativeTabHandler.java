@@ -51,6 +51,30 @@ public class CreativeTabHandler {
             .build()
     );
 
+    // Вкладка водных аксессуаров
+    public static final Supplier<CreativeModeTab> WATER_ACCESSORIES_TAB = CREATIVE_MODE_TABS.register("water_accessories",
+        () -> CreativeModeTab.builder()
+            .title(Component.translatable("itemGroup.examplemod.water_accessories"))
+            .icon(() -> new ItemStack(ModItems.WATER_CHARM.get()))
+            .displayItems((parameters, output) -> {
+                output.accept(ModItems.WATER_CHARM.get());
+                output.accept(ModItems.WATER_MASK.get());
+                output.accept(ModItems.WATER_HAT.get());
+                output.accept(ModItems.WATER_NECKLACE.get());
+                output.accept(ModItems.WATER_CAPE.get());
+                output.accept(ModItems.WATER_BACK.get());
+                output.accept(ModItems.WATER_WRIST.get());
+                output.accept(ModItems.WATER_HAND_1.get());
+                output.accept(ModItems.WATER_HAND_2.get());
+                output.accept(ModItems.WATER_RING_1.get());
+                output.accept(ModItems.WATER_RING_2.get());
+                output.accept(ModItems.WATER_BELT.get());
+                output.accept(ModItems.WATER_ANKLET.get());
+                output.accept(ModItems.WATER_SHOES.get());
+            })
+            .build()
+    );
+
     public static void register(IEventBus eventBus) {
         CREATIVE_MODE_TABS.register(eventBus);
     }

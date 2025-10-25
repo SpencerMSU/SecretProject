@@ -2,6 +2,7 @@ package com.example.examplemod.items;
 
 import com.example.examplemod.ExampleMod;
 import com.example.examplemod.items.FireAccessories.*;
+import com.example.examplemod.items.WaterAccessories.*;
 import net.minecraft.world.item.Item;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredItem;
@@ -106,6 +107,91 @@ public class ModItems {
     public static final DeferredItem<FireShoesItem> FIRE_SHOES = ITEMS.registerItem(
         "fire_shoes",
         FireShoesItem::new,
+        new Item.Properties().stacksTo(1)
+    );
+
+    // Водные аксессуары
+    public static final DeferredItem<WaterCharmItem> WATER_CHARM = ITEMS.registerItem(
+        "water_charm",
+        WaterCharmItem::new,
+        new Item.Properties().stacksTo(1)
+    );
+
+    public static final DeferredItem<WaterMaskItem> WATER_MASK = ITEMS.registerItem(
+        "water_mask",
+        WaterMaskItem::new,
+        new Item.Properties().stacksTo(1)
+    );
+
+    public static final DeferredItem<WaterHatItem> WATER_HAT = ITEMS.registerItem(
+        "water_hat",
+        WaterHatItem::new,
+        new Item.Properties().stacksTo(1)
+    );
+
+    public static final DeferredItem<WaterNecklaceItem> WATER_NECKLACE = ITEMS.registerItem(
+        "water_necklace",
+        WaterNecklaceItem::new,
+        new Item.Properties().stacksTo(1)
+    );
+
+    public static final DeferredItem<WaterCapeItem> WATER_CAPE = ITEMS.registerItem(
+        "water_cape",
+        WaterCapeItem::new,
+        new Item.Properties().stacksTo(1)
+    );
+
+    public static final DeferredItem<WaterBackItem> WATER_BACK = ITEMS.registerItem(
+        "water_back",
+        WaterBackItem::new,
+        new Item.Properties().stacksTo(1)
+    );
+
+    public static final DeferredItem<WaterWristItem> WATER_WRIST = ITEMS.registerItem(
+        "water_wrist",
+        WaterWristItem::new,
+        new Item.Properties().stacksTo(1)
+    );
+
+    public static final DeferredItem<WaterHandItem> WATER_HAND_1 = ITEMS.registerItem(
+        "water_hand_1",
+        WaterHandItem::new,
+        new Item.Properties().stacksTo(1)
+    );
+
+    public static final DeferredItem<WaterHandItem> WATER_HAND_2 = ITEMS.registerItem(
+        "water_hand_2",
+        WaterHandItem::new,
+        new Item.Properties().stacksTo(1)
+    );
+
+    public static final DeferredItem<WaterRingItem> WATER_RING_1 = ITEMS.registerItem(
+        "water_ring_1",
+        WaterRingItem::new,
+        new Item.Properties().stacksTo(1)
+    );
+
+    public static final DeferredItem<WaterRingItem> WATER_RING_2 = ITEMS.registerItem(
+        "water_ring_2",
+        WaterRingItem::new,
+        new Item.Properties().stacksTo(1)
+    );
+
+    public static final DeferredItem<WaterBeltItem> WATER_BELT = ITEMS.registerItem(
+        "water_belt",
+        WaterBeltItem::new,
+        new Item.Properties().stacksTo(1)
+    );
+
+    public static final DeferredItem<WaterAnkletItem> WATER_ANKLET = ITEMS.registerItem(
+        "water_anklet",
+        WaterAnkletItem::new,
+        new Item.Properties().stacksTo(1)
+    );
+
+    public static final DeferredItem<WaterShoesItem> WATER_SHOES = ITEMS.registerItem(
+        "water_shoes",
+        WaterShoesItem::new,
         new Item.Properties().stacksTo(1)
     );
 

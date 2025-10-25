@@ -3,7 +3,8 @@
   "values": [
     "minecraft:diamond",
     "examplemod:fire_ring_1",
-    "examplemod:fire_ring_2"
+    "examplemod:fire_ring_2",
+    "examplemod:water_ring_1",
+    "examplemod:water_ring_2"
   ]
 }
-

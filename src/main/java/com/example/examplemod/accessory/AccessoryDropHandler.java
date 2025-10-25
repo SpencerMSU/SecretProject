@@ -21,6 +21,7 @@ public class AccessoryDropHandler {
     
     private static final Random RANDOM = new Random();
     private static List<Item> fireAccessories = null;
+    private static List<Item> waterAccessories = null;
     
     private static List<Item> getFireAccessories() {
         if (fireAccessories == null) {
@@ -42,6 +43,28 @@ public class AccessoryDropHandler {
             );
         }
         return fireAccessories;
+    }
+    
+    private static List<Item> getWaterAccessories() {
+        if (waterAccessories == null) {
+            waterAccessories = List.of(
+                ModItems.WATER_CHARM.get(),
+                ModItems.WATER_MASK.get(),
+                ModItems.WATER_HAT.get(),
+                ModItems.WATER_NECKLACE.get(),
+                ModItems.WATER_CAPE.get(),
+                ModItems.WATER_BACK.get(),
+                ModItems.WATER_WRIST.get(),
+                ModItems.WATER_HAND_1.get(),
+                ModItems.WATER_HAND_2.get(),
+                ModItems.WATER_RING_1.get(),
+                ModItems.WATER_RING_2.get(),
+                ModItems.WATER_BELT.get(),
+                ModItems.WATER_ANKLET.get(),
+                ModItems.WATER_SHOES.get()
+            );
+        }
+        return waterAccessories;
     }
     
     @SubscribeEvent
@@ -66,10 +89,17 @@ public class AccessoryDropHandler {
         }
         
         if (RANDOM.nextDouble() < dropChance) {
+            List<Item> accessories = null;
+            
+            // Определяем тип аксессуаров в зависимости от моба
             if (AccessoryConfig.FIRE_ACCESSORY_MOBS.get().contains(entityIdString) || 
                 AccessoryConfig.NETHER_MOBS.get().contains(entityIdString)) {
-                
-                List<Item> accessories = getFireAccessories();
+                accessories = getFireAccessories();
+            } else if (isWaterMob(entityIdString)) {
+                accessories = getWaterAccessories();
+            }
+            
+            if (accessories != null) {
                 Item accessory = accessories.get(RANDOM.nextInt(accessories.size()));
                 ItemStack stack = new ItemStack(accessory);
                 
@@ -81,6 +111,19 @@ public class AccessoryDropHandler {
                 event.getDrops().add(entity.spawnAtLocation(stack));
             }
         }
+    }
+    
+    private static boolean isWaterMob(String entityIdString) {
+        // Водные мобы, которые дропают водные аксессуары
+        return entityIdString.equals("minecraft:drowned") ||
+               entityIdString.equals("minecraft:guardian") ||
+               entityIdString.equals("minecraft:elder_guardian") ||
+               entityIdString.equals("minecraft:cod") ||
+               entityIdString.equals("minecraft:salmon") ||
+               entityIdString.equals("minecraft:tropical_fish") ||
+               entityIdString.equals("minecraft:pufferfish") ||
+               entityIdString.equals("minecraft:squid") ||
+               entityIdString.equals("minecraft:glow_squid");
     }
     
     private static AccessoryRarity rollRarity() {

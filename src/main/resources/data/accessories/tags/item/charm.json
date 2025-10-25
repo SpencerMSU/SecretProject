@@ -1,7 +1,7 @@
 {
   "replace": false,
   "values": [
-    "examplemod:fire_charm"
+    "examplemod:fire_charm",
+    "examplemod:water_charm"
   ]
 }
-

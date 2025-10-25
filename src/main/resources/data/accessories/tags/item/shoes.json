@@ -1,7 +1,7 @@
 {
   "replace": false,
   "values": [
-    "examplemod:fire_shoes"
+    "examplemod:fire_shoes",
+    "examplemod:water_shoes"
   ]
 }
-

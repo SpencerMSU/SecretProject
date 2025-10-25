@@ -31,14 +31,15 @@ public class ManaSystem {
         // Получаем текущие данные маны из NBT игрока
         ManaData currentMana = getManaData(player);
         
-        // Проверяем, есть ли полный огненный сет
+        // Проверяем, есть ли полные сеты
         boolean hasFullFireSet = SetBonusHandler.hasFullFireSet(player);
+        boolean hasFullWaterSet = SetBonusHandler.hasFullWaterSet(player);
         
         // Вычисляем новые параметры маны
-        int newMaxMana = BASE_MANA + (hasFullFireSet ? FULL_SET_MANA_BONUS : 0);
+        int newMaxMana = BASE_MANA + ((hasFullFireSet || hasFullWaterSet) ? FULL_SET_MANA_BONUS : 0);
         float newRegenRate = MANA_REGEN_BASE_RATE;
-        float newSpellDiscount = hasFullFireSet ? FULL_SET_DISCOUNT : 0.0f;
-        float newCooldownReduction = hasFullFireSet ? FULL_SET_COOLDOWN_REDUCTION : 0.0f;
+        float newSpellDiscount = (hasFullFireSet || hasFullWaterSet) ? FULL_SET_DISCOUNT : 0.0f;
+        float newCooldownReduction = (hasFullFireSet || hasFullWaterSet) ? FULL_SET_COOLDOWN_REDUCTION : 0.0f;
         
         // Применяем бонусы от эффекта регенерации маны
         Holder<net.minecraft.world.effect.MobEffect> manaRegenHolder = 
@@ -92,23 +93,51 @@ public class ManaSystem {
         persistentData.put("examplemod.mana", manaTag);
     }
     
-    public static boolean canCastSpell(Player player, int baseManaCost) {
+    public static boolean canCastSpell(Player player, int baseManaCost, String spellId) {
         ManaData manaData = getManaData(player);
         
-        // Применяем скидку на огненные заклинания
-        int actualCost = (int) (baseManaCost * (1.0f - manaData.spellDiscount()));
+        // Применяем скидку только для соответствующих заклинаний
+        float discount = 0.0f;
+        if (isFireSpell(spellId) && SetBonusHandler.hasFullFireSet(player)) {
+            discount = manaData.spellDiscount();
+        } else if (isWaterSpell(spellId) && SetBonusHandler.hasFullWaterSet(player)) {
+            discount = manaData.spellDiscount();
+        }
         
+        int actualCost = (int) (baseManaCost * (1.0f - discount));
         return manaData.canCast(actualCost);
     }
     
-    public static void consumeMana(Player player, int baseManaCost) {
+    public static void consumeMana(Player player, int baseManaCost, String spellId) {
         ManaData manaData = getManaData(player);
         
-        // Применяем скидку на огненные заклинания
-        int actualCost = (int) (baseManaCost * (1.0f - manaData.spellDiscount()));
+        // Применяем скидку только для соответствующих заклинаний
+        float discount = 0.0f;
+        if (isFireSpell(spellId) && SetBonusHandler.hasFullFireSet(player)) {
+            discount = manaData.spellDiscount();
+        } else if (isWaterSpell(spellId) && SetBonusHandler.hasFullWaterSet(player)) {
+            discount = manaData.spellDiscount();
+        }
         
+        int actualCost = (int) (baseManaCost * (1.0f - discount));
         ManaData newManaData = manaData.consumeMana(actualCost);
         setManaData(player, newManaData);
+    }
+    
+    private static boolean isFireSpell(String spellId) {
+        return spellId.equals("spark") || spellId.equals("ember") || spellId.equals("fire_bolt") || 
+               spellId.equals("flame_burst") || spellId.equals("magma_spike") || spellId.equals("blaze_rush") ||
+               spellId.equals("inferno") || spellId.equals("hellfire") || spellId.equals("phoenix_rebirth") ||
+               spellId.equals("solar_eclipse") || spellId.equals("soul_fire_ritual") || 
+               spellId.equals("phoenix_necromancy");
+    }
+    
+    private static boolean isWaterSpell(String spellId) {
+        return spellId.equals("splash") || spellId.equals("bubble") || spellId.equals("ice_shard") || 
+               spellId.equals("frost_bolt") || spellId.equals("tidal_wave") || spellId.equals("blizzard") ||
+               spellId.equals("ice_prison") || spellId.equals("tsunami") || spellId.equals("polar_vortex") ||
+               spellId.equals("deep_freeze") || spellId.equals("aqua_healing") || 
+               spellId.equals("crystal_barrier");
     }
     
     public static float getCooldownMultiplier(Player player) {
