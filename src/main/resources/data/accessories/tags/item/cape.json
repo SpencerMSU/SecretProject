@@ -1,7 +1,8 @@
 {
   "replace": false,
   "values": [
-    "examplemod:fire_cape"
+    "examplemod:fire_cape",
+    "examplemod:water_cape"
   ]
 }
 
