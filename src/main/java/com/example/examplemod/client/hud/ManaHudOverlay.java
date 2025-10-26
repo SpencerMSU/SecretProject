@@ -137,12 +137,20 @@ public class ManaHudOverlay {
         }
 
         if (entry != null) {
-            var pose = g.pose();
-            pose.pushPose();
-            // Center the icon within the smaller slot
-            int iconOffset = (slotSize - 16) / 2; // Center 16x16 icon in slot
-            g.renderItem(entry.icon(), sx + iconOffset, sy + iconOffset);
-            pose.popPose();
+            ResourceLocation tex = entry.iconTexture();
+            if (tex != null) {
+                int drawSize = Math.max(8, Math.min(slotSize - 2, 12));
+                int ix = sx + (slotSize - drawSize) / 2;
+                int iy = sy + (slotSize - drawSize) / 2;
+                // Рисуем 32x32 регион с масштабированием в drawSize
+                g.blit(tex, ix, iy, drawSize, drawSize, 0, 0, 32, 32, 32, 32);
+            } else {
+                var pose = g.pose();
+                pose.pushPose();
+                int iconOffset = (slotSize - 16) / 2; // Center 16x16 icon in slot
+                g.renderItem(entry.icon(), sx + iconOffset, sy + iconOffset);
+                pose.popPose();
+            }
         }
     }
 }

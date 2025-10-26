@@ -1,9 +1,11 @@
 package com.example.examplemod.client.spell;
 
+import com.example.examplemod.ExampleMod;
 import com.example.examplemod.spell.SpellClass;
 import com.example.examplemod.spell.SpellEntry;
 import com.example.examplemod.spell.SpellRarity;
 import com.example.examplemod.spell.VisualEffect;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
@@ -57,9 +59,7 @@ public final class ClientSpellState {
         }
     }
     
-    /**
-     * Получить данные для сохранения
-     */
+
     public static int getScrollOffset() {
         return scrollOffset;
     }
@@ -108,6 +108,7 @@ public final class ClientSpellState {
                 "spark", 
                 Component.translatable("spell.examplemod.spark"),
                 new ItemStack(Items.FLINT_AND_STEEL),
+                ResourceLocation.fromNamespaceAndPath(ExampleMod.MODID, "textures/spell_icons/fire/spark.png"),
                 SpellRarity.COMMON,
                 8,
                 15,
@@ -119,6 +120,7 @@ public final class ClientSpellState {
                 "ember", 
                 Component.translatable("spell.examplemod.ember"),
                 new ItemStack(Items.TORCH),
+                ResourceLocation.fromNamespaceAndPath(ExampleMod.MODID, "textures/spell_icons/fire/ember.png"),
                 SpellRarity.COMMON,
                 12,
                 20,
@@ -131,6 +133,7 @@ public final class ClientSpellState {
                 "fire_bolt", 
                 Component.translatable("spell.examplemod.fire_bolt"),
                 new ItemStack(Items.BLAZE_POWDER),
+                ResourceLocation.fromNamespaceAndPath(ExampleMod.MODID, "textures/spell_icons/fire/fire_bolt.png"),
                 SpellRarity.UNCOMMON,
                 25,
                 35,
@@ -142,6 +145,7 @@ public final class ClientSpellState {
                 "flame_burst", 
                 Component.translatable("spell.examplemod.flame_burst"),
                 new ItemStack(Items.FIRE_CHARGE),
+                ResourceLocation.fromNamespaceAndPath(ExampleMod.MODID, "textures/spell_icons/fire/flame_burst.png"),
                 SpellRarity.UNCOMMON,
                 30,
                 40,
@@ -154,6 +158,7 @@ public final class ClientSpellState {
                 "magma_spike", 
                 Component.translatable("spell.examplemod.magma_spike"),
                 new ItemStack(Items.MAGMA_BLOCK),
+                ResourceLocation.fromNamespaceAndPath(ExampleMod.MODID, "textures/spell_icons/fire/magma_spike.png"),
                 SpellRarity.RARE,
                 55,
                 60,
@@ -165,6 +170,7 @@ public final class ClientSpellState {
                 "blaze_rush", 
                 Component.translatable("spell.examplemod.blaze_rush"),
                 new ItemStack(Items.BLAZE_ROD),
+                ResourceLocation.fromNamespaceAndPath(ExampleMod.MODID, "textures/spell_icons/fire/blaze_rush.png"),
                 SpellRarity.RARE,
                 60,
                 70,
@@ -177,6 +183,7 @@ public final class ClientSpellState {
                 "inferno", 
                 Component.translatable("spell.examplemod.inferno"),
                 new ItemStack(Items.LAVA_BUCKET),
+                ResourceLocation.fromNamespaceAndPath(ExampleMod.MODID, "textures/spell_icons/fire/inferno.png"),
                 SpellRarity.EPIC,
                 95,
                 100,
@@ -188,6 +195,7 @@ public final class ClientSpellState {
                 "hellfire", 
                 Component.translatable("spell.examplemod.hellfire"),
                 new ItemStack(Items.NETHERRACK),
+                ResourceLocation.fromNamespaceAndPath(ExampleMod.MODID, "textures/spell_icons/fire/hellfire.png"),
                 SpellRarity.EPIC,
                 100,
                 110,
@@ -200,6 +208,7 @@ public final class ClientSpellState {
                 "phoenix_rebirth", 
                 Component.translatable("spell.examplemod.phoenix_rebirth"),
                 new ItemStack(Items.BLAZE_POWDER),
+                ResourceLocation.fromNamespaceAndPath(ExampleMod.MODID, "textures/spell_icons/fire/phoenix_rebirth.png"),
                 SpellRarity.LEGENDARY,
                 150,
                 150,
@@ -212,6 +221,7 @@ public final class ClientSpellState {
                 "solar_eclipse", 
                 Component.translatable("spell.examplemod.solar_eclipse"),
                 new ItemStack(Items.NETHER_STAR),
+                ResourceLocation.fromNamespaceAndPath(ExampleMod.MODID, "textures/spell_icons/fire/solar_eclipse.png"),
                 SpellRarity.MYTHIC,
                 250,
                 200,
@@ -224,6 +234,7 @@ public final class ClientSpellState {
                 "soul_fire_ritual", 
                 Component.translatable("spell.examplemod.soul_fire_ritual"),
                 new ItemStack(Items.WITHER_SKELETON_SKULL),
+                ResourceLocation.fromNamespaceAndPath(ExampleMod.MODID, "textures/spell_icons/fire/soul_fire_ritual.png"),
                 SpellRarity.NECROMANCER_FIRE,
                 180,
                 120,
@@ -235,6 +246,7 @@ public final class ClientSpellState {
                 "phoenix_necromancy", 
                 Component.translatable("spell.examplemod.phoenix_necromancy"),
                 new ItemStack(Items.PHANTOM_MEMBRANE),
+                ResourceLocation.fromNamespaceAndPath(ExampleMod.MODID, "textures/spell_icons/fire/phoenix_necromancy.png"),
                 SpellRarity.NECROMANCER_FIRE,
                 220,
                 150,

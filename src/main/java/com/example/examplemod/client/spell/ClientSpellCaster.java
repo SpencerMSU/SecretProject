@@ -12,38 +12,34 @@ public final class ClientSpellCaster {
     public static boolean tryCastActive(Minecraft mc) {
         if (mc.player == null) return false;
         
-        // Debug: Check if holding wand
+        // Проверяем, держит ли игрок палочку
         boolean holdingWand = ClientSpellState.isHoldingWand(mc);
         if (!holdingWand) {
-            // Debug message
-            mc.player.sendSystemMessage(net.minecraft.network.chat.Component.literal("§cНужно держать палочку для кастования заклинаний!"));
+            // Без вывода сообщений в чат
             return false;
         }
         
         int index = ClientSpellState.getActiveIndex();
         SpellEntry entry = ClientSpellState.getHotbarEntry(index);
         if (entry == null) {
-            mc.player.sendSystemMessage(net.minecraft.network.chat.Component.literal("§cНет заклинания в активном слоте!"));
+            // Без вывода сообщений в чат
             return false;
         }
         
-        // Check if player has enough mana (client-side check for responsiveness)
+        // Проверка маны на клиенте для отзывчивости UI
         var mana = ManaProvider.get(mc.player);
         if (mana.getCurrentMana() < entry.manaCost()) {
-            // Not enough mana - don't cast
-            mc.player.sendSystemMessage(net.minecraft.network.chat.Component.literal("§cНедостаточно маны! Нужно: " + entry.manaCost() + ", есть: " + mana.getCurrentMana()));
+            // Без вывода сообщений в чат
             return false;
         }
         
-        // Send packet to server to actually consume mana
+        // Отправляем пакет на сервер для фактического расхода маны
         NetworkHandler.sendToServer(new SpellCastPayload(entry.id(), entry.manaCost()));
         
-        // Optimistically update client-side mana for visual feedback
+        // Оптимистично обновляем клиентскую ману
         mana.setCurrentMana(mana.getCurrentMana() - entry.manaCost());
         
-        // Success message
-        mc.player.sendSystemMessage(net.minecraft.network.chat.Component.literal("§aКастуется заклинание: " + entry.displayName().getString()));
-        
+        // Без сообщений об успехе в чат
         return true;
     }
 }

@@ -120,6 +120,10 @@
   "spell.examplemod.phoenix_rebirth.desc": "Восстань как феникс, крылья пламени поглощают всё",
   "spell.examplemod.solar_eclipse": "Солнечное затмение",
   "spell.examplemod.solar_eclipse.desc": "Используй силу умирающей звезды - абсолютное разрушение",
+  "spell.examplemod.soul_fire_ritual": "Ритуал душевого пламени",
+  "spell.examplemod.soul_fire_ritual.desc": "Призови жуткие душевные огни в ритуальном круге",
+  "spell.examplemod.phoenix_necromancy": "Некромантия феникса",
+  "spell.examplemod.phoenix_necromancy.desc": "Восстань тёмным фениксом из пепла",
   
   "_comment": "Водные заклинания",
   "spell.examplemod.water_splash": "Водяной всплеск",

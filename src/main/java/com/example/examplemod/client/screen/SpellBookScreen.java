@@ -8,6 +8,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.ArrayList;
@@ -18,6 +19,7 @@ public class SpellBookScreen extends Screen {
     private static final int PADDING = 8;
     private static final int SLOT_SIZE = 20; // Уменьшил размер слотов для оконного режима
     private static final int SLOT_GAP = 2;   // Уменьшил промежутки для компактности
+    private static final int RIGHT_SLOT_SIZE = 30; // Фиксированный размер правых слотов
 
     private SpellEntry dragging;
     private int scrollOffset = 0;
@@ -35,7 +37,7 @@ public class SpellBookScreen extends Screen {
 
         int btnWidth = Math.min(80, (width - PADDING * 3) / 2);
         int left = PADDING;
-        int top = PADDING;
+        int top = PADDING + 8; // сдвиг кнопок чуть ниже
         tabFire = Button.builder(Component.translatable("screen.examplemod.spell_book.tab.fire"), b -> {
             ClientSpellState.setSelectedClass(SpellClass.FIRE);
         }).bounds(left, top, btnWidth, 20).build();
@@ -63,12 +65,12 @@ public class SpellBookScreen extends Screen {
         int panelPadding = Math.max(5, Math.min(10, w / 80));
         int midX = w / 2;
 
-        // Title
-        g.drawString(this.font, this.title, PADDING, PADDING - 10, 0xFFFFFF);
+        // Title (опущен чуть ниже)
+        g.drawString(this.font, this.title, PADDING, PADDING - 2, 0xFFFFFF);
         
-        // Instructions
-        String instructions = "Держите палочку и нажмите ПКМ для кастования";
-        g.drawString(this.font, instructions, PADDING, PADDING + 10, 0xAAAAAA);
+        // Убрана подсказка/инструкция
+        // String instructions = "Держите палочку и нажмите ПКМ для кастования";
+        // g.drawString(this.font, instructions, PADDING, PADDING + 10, 0xAAAAAA);
 
         // Left panel: spells of selected class (wider on larger screens)
         int leftPanelLeft = PADDING;
@@ -94,7 +96,15 @@ public class SpellBookScreen extends Screen {
 
         // Tooltip for dragging
         if (dragging != null) {
-            g.renderItem(dragging.icon(), mouseX - 8, mouseY - 8);
+            ResourceLocation tex = dragging.iconTexture();
+            if (tex != null) {
+                int drawSize = 20;
+                int ix = mouseX - drawSize / 2;
+                int iy = mouseY - drawSize / 2;
+                g.blit(tex, ix, iy, drawSize, drawSize, 0, 0, 32, 32, 32, 32);
+            } else {
+                g.renderItem(dragging.icon(), mouseX - 8, mouseY - 8);
+            }
         }
         
         // Render spell tooltip on hover
@@ -189,38 +199,121 @@ public class SpellBookScreen extends Screen {
 
     private void drawHotbarSlots(GuiGraphics g, int left, int top, int width, int height) {
         int slots = ClientSpellState.getHotbarSize();
-        int totalHeight = slots * SLOT_SIZE + (slots - 1) * SLOT_GAP;
+        int slotSize = RIGHT_SLOT_SIZE;
+        int totalHeight = slots * slotSize + (slots - 1) * SLOT_GAP;
         int sy = top + (height - totalHeight) / 2;
         for (int i = 0; i < slots; i++) {
-            int sx = left + (width - SLOT_SIZE) / 2;
-            drawSlot(g, sx, sy + i * (SLOT_SIZE + SLOT_GAP), ClientSpellState.getHotbarEntry(i));
+            int sx = left + (width - slotSize) / 2;
+            SpellEntry entry = ClientSpellState.getHotbarEntry(i);
+            // Слот справа: рисуем только иконку без чисел
+            drawSlotIconOnly(g, sx, sy + i * (slotSize + SLOT_GAP), slotSize, entry);
+
+            // Подпись справа от иконки: "✦ <мана>  <название>"
+            if (entry != null) {
+                int cy = sy + i * (slotSize + SLOT_GAP);
+                int textX = sx + slotSize + 6;
+                int baselineY = cy + (slotSize - this.font.lineHeight) / 2;
+                int maxTextWidth = left + width - textX;
+
+                String manaText = "✦ " + entry.manaCost();
+                int manaWidth = this.font.width(manaText);
+                // Ограничиваем имя по оставшейся ширине
+                int maxNameWidth = Math.max(0, maxTextWidth - manaWidth - 6);
+                String name = entry.displayName().getString();
+                String trimmed = trimToWidthWithEllipsis(name, maxNameWidth);
+
+                // Рисуем ману синим
+                g.drawString(this.font, manaText, textX, baselineY, 0xFF5555FF);
+                // Рисуем имя белым
+                g.drawString(this.font, trimmed, textX + manaWidth + 6, baselineY, 0xFFFFFFFF);
+            }
         }
+    }
+
+    // Рисует слот и иконку без чисел (для правой панели)
+    private void drawSlotIconOnly(GuiGraphics g, int x, int y, int slotSize, SpellEntry entry) {
+        int borderColor = entry != null ? entry.rarity().getColor() : 0xAA000000;
+        g.fill(x, y, x + slotSize, y + slotSize, 0xFF1F2937);
+        g.fill(x, y, x + slotSize, y + 1, borderColor);
+        g.fill(x, y + slotSize - 1, x + slotSize, y + slotSize, borderColor);
+        g.fill(x, y, x + 1, y + slotSize, borderColor);
+        g.fill(x + slotSize - 1, y, x + slotSize, y + slotSize, borderColor);
+
+        if (entry != null) {
+            ResourceLocation tex = entry.iconTexture();
+            if (tex != null) {
+                int drawSize = Math.max(8, slotSize - 4);
+                int ix = x + (slotSize - drawSize) / 2;
+                int iy = y + (slotSize - drawSize) / 2;
+                g.blit(tex, ix, iy, drawSize, drawSize, 0, 0, 32, 32, 32, 32);
+            } else {
+                float scale = Math.max(0.5f, (slotSize - 2) / 16f);
+                int drawSize = Math.round(16 * scale);
+                int ix = x + (slotSize - drawSize) / 2;
+                int iy = y + (slotSize - drawSize) / 2;
+                var pose = g.pose();
+                pose.pushPose();
+                pose.translate(ix, iy, 0);
+                pose.scale(scale, scale, 1.0f);
+                g.renderItem(entry.icon(), 0, 0);
+                pose.popPose();
+            }
+        }
+    }
+
+    // Обрезка строки по ширине с добавлением троеточия при необходимости
+    private String trimToWidthWithEllipsis(String text, int maxWidth) {
+        if (maxWidth <= 0) return "";
+        if (this.font.width(text) <= maxWidth) return text;
+        String ellipsis = "...";
+        int ellipsisW = this.font.width(ellipsis);
+        String base = text;
+        while (!base.isEmpty() && this.font.width(base) + ellipsisW > maxWidth) {
+            base = base.substring(0, base.length() - 1);
+        }
+        return base.isEmpty() ? "" : base + ellipsis;
     }
     
 
     private void drawSlot(GuiGraphics g, int x, int y, int slotSize, SpellEntry entry) {
-        // Draw slot with rarity-colored border
+        // Рисуем фон слота и ВНУТРЕННЮЮ рамку, чтобы она не заходила на соседние слоты
         int borderColor = entry != null ? entry.rarity().getColor() : 0xAA000000;
-        g.fill(x - 2, y - 2, x + slotSize + 2, y + slotSize + 2, borderColor);
-        g.fill(x - 1, y - 1, x + slotSize + 1, y + slotSize + 1, 0xFF1F2937);
+
+        // Фон слота
+        g.fill(x, y, x + slotSize, y + slotSize, 0xFF1F2937);
+
+        // Внутренняя 1px рамка по границе слота
+        g.fill(x, y, x + slotSize, y + 1, borderColor);                    // верхняя
+        g.fill(x, y + slotSize - 1, x + slotSize, y + slotSize, borderColor); // нижняя
+        g.fill(x, y, x + 1, y + slotSize, borderColor);                    // левая
+        g.fill(x + slotSize - 1, y, x + slotSize, y + slotSize, borderColor); // правая
         
         if (entry != null) {
-            // Center the icon within the slot
-            int iconOffset = (slotSize - 16) / 2; // Center 16x16 icon in slot
-            g.renderItem(entry.icon(), x + iconOffset, y + iconOffset);
-            
-            // Draw damage and mana cost as text
+            // Рисуем иконку: если есть кастомная текстура — используем её, иначе предмет
+            ResourceLocation tex = entry.iconTexture();
+            if (tex != null) {
+                int drawSize = Math.max(12, Math.min(slotSize - 4, 20)); // масштаб под слот
+                int ix = x + (slotSize - drawSize) / 2;
+                int iy = y + (slotSize - drawSize) / 2;
+                // Полный регион 32x32 с масштабированием в drawSize
+                g.blit(tex, ix, iy, drawSize, drawSize, 0, 0, 32, 32, 32, 32);
+            } else {
+                int iconOffset = (slotSize - 16) / 2;
+                g.renderItem(entry.icon(), x + iconOffset, y + iconOffset);
+            }
+
+            // Параметры урона и маны
             String damageText = String.valueOf(entry.damage());
             String manaText = String.valueOf(entry.manaCost());
-            
-            // Damage (red) in bottom-left
+
+            // Урон (красный) слева снизу
             g.drawString(this.font, damageText, x + 2, y + slotSize - 10, 0xFFFF5555);
-            
-            // Mana cost (blue) in bottom-right
+
+            // Мана (синяя) справа снизу
             int manaWidth = this.font.width(manaText);
             g.drawString(this.font, manaText, x + slotSize - manaWidth - 2, y + slotSize - 10, 0xFF5555FF);
-            
-            // Draw spell name at the top (if there's space)
+
+            // Название сверху, если хватает места
             if (slotSize >= 24) {
                 String name = entry.displayName().getString();
                 if (name.length() > 8) {
@@ -335,16 +428,49 @@ public class SpellBookScreen extends Screen {
         int height = rightPanelBottom - rightPanelTop - innerPadding * 2;
 
         int slots = ClientSpellState.getHotbarSize();
-        int totalHeight = slots * SLOT_SIZE + (slots - 1) * SLOT_GAP;
+        int slotSize = RIGHT_SLOT_SIZE; // фиксированный размер
+        int totalHeight = slots * slotSize + (slots - 1) * SLOT_GAP;
         int sy = top + (height - totalHeight) / 2;
-        int sx = left + (width - SLOT_SIZE) / 2;
+        int sx = left + (width - slotSize) / 2;
         for (int i = 0; i < slots; i++) {
-            int cy = sy + i * (SLOT_SIZE + SLOT_GAP);
-            if (mouseX >= sx && mouseX <= sx + SLOT_SIZE && mouseY >= cy && mouseY <= cy + SLOT_SIZE) {
+            int cy = sy + i * (slotSize + SLOT_GAP);
+            if (mouseX >= sx && mouseX <= sx + slotSize && mouseY >= cy && mouseY <= cy + slotSize) {
                 return i;
             }
         }
         return -1;
+    }
+
+    /**
+     * Вычисляет размер слота, используемый в левой панели (сетке заклинаний),
+     * чтобы справа (хотбар) использовать такой же.
+     */
+    private int computeLeftSlotSize() {
+        int w = this.width;
+        int h = this.height;
+        int panelPadding = Math.max(5, Math.min(10, w / 80));
+        int midX = w / 2;
+
+        int leftPanelLeft = PADDING;
+        int leftPanelTop = PADDING + 28;
+        int leftPanelRight = midX - panelPadding;
+        int leftPanelBottom = h - PADDING;
+
+        int innerPadding = Math.max(4, Math.min(8, w / 100));
+        int innerLeft = leftPanelLeft + innerPadding;
+        int innerTop = leftPanelTop + innerPadding;
+        int innerWidth = leftPanelRight - leftPanelLeft - innerPadding * 2;
+        int innerHeight = leftPanelBottom - leftPanelTop - innerPadding * 2;
+
+        int cols = 3;
+        int maxRows = 4;
+        int availableWidth = innerWidth - SLOT_GAP * 2;
+        int availableHeight = innerHeight - SLOT_GAP * 2;
+        int slotWidth = (availableWidth - (cols - 1) * SLOT_GAP) / cols;
+        int slotHeight = (availableHeight - (maxRows - 1) * SLOT_GAP) / maxRows;
+        int slotSize = Math.min(slotWidth, slotHeight);
+        // Защита от некорректных значений
+        return Math.max(16, slotSize);
     }
 
     @Override

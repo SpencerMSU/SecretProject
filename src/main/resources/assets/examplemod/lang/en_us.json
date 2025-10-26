@@ -6,12 +6,12 @@
   "curios.identifier.belt": "Belt",
   "curios.identifier.charm": "Charm",
   "curios.identifier.back": "Back",
-  
-  "_comment": "Upgrade Stones",
+
+  "_comment_accessories_upgrade": "Upgrade Stones",
   "item.examplemod.enchantment_stone": "Enchantment Stone",
   "item.examplemod.rarity_upgrade_stone": "Rarity Upgrade Stone",
-  
-  "_comment": "Fire Accessories",
+
+  "_comment_fire_acc": "Fire Accessories",
   "item.examplemod.fire_charm": "Fire Charm",
   "item.examplemod.fire_mask": "Fire Mask",
   "item.examplemod.fire_hat": "Fire Hat",
@@ -27,8 +27,8 @@
   "item.examplemod.fire_anklet": "Fire Anklet",
   "item.examplemod.fire_shoes": "Fire Shoes",
   "itemGroup.examplemod.fire_accessories": "Fire Accessories",
-  
-  "_comment": "Water Accessories",
+
+  "_comment_water_acc": "Water Accessories",
   "item.examplemod.water_charm": "Water Charm",
   "item.examplemod.water_mask": "Water Mask",
   "item.examplemod.water_hat": "Water Hat",
@@ -44,28 +44,27 @@
   "item.examplemod.water_anklet": "Water Anklet",
   "item.examplemod.water_shoes": "Water Shoes",
   "itemGroup.examplemod.water_accessories": "Water Accessories",
-  
-  "_comment": "Fire Accessories",
+
+  "_comment_fire_acc2": "Fire Accessories (lore)",
   "item.examplemod.fire_ring": "Ring of Flame",
   "item.examplemod.fire_necklace": "Necklace of Sun",
   "item.examplemod.fire_bracelet": "Bracelet of Volcano",
   "item.examplemod.fire_belt": "Belt of Dragon",
   "item.examplemod.fire_charm": "Charm of Phoenix",
   "item.examplemod.fire_cloak": "Cloak of Hell",
-  
-  "_comment": "Water Accessories",
+
+  "_comment_water_acc2": "Water Accessories (lore)",
   "item.examplemod.water_ring": "Ring of Ocean",
   "item.examplemod.water_necklace": "Necklace of Moon",
   "item.examplemod.water_bracelet": "Bracelet of Ice",
   "item.examplemod.water_belt": "Belt of Triton",
   "item.examplemod.water_charm": "Charm of Poseidon",
   "item.examplemod.water_cloak": "Cloak of Depths",
-  
-  "_comment": "Test Item",
+
+  "_comment_test": "Test Item",
   "item.examplemod.test_anklet": "TEST Anklet",
-  
-  "_comment": "New fire accessories",
-  "item.examplemod.fire_anklet": "Anklet of Satan",
+
+  "_comment_new_fire_acc": "New fire accessories",
   "item.examplemod.fire_gloves": "Gloves of Dragon",
   "item.examplemod.fire_crown": "Crown of Sun",
   "item.examplemod.fire_earring": "Earring of Phoenix",
@@ -73,9 +72,8 @@
   "item.examplemod.fire_boots": "Boots of Hell",
   "item.examplemod.fire_cape": "Cape of Dragon",
   "item.examplemod.fire_mask": "Mask of Demon",
-  
-  "_comment": "New water accessories",
-  "item.examplemod.water_anklet": "Anklet of Triton",
+
+  "_comment_new_water_acc": "New water accessories",
   "item.examplemod.water_gloves": "Gloves of Poseidon",
   "item.examplemod.water_crown": "Crown of Moon",
   "item.examplemod.water_earring": "Earring of Ocean",
@@ -83,14 +81,14 @@
   "item.examplemod.water_boots": "Boots of Depths",
   "item.examplemod.water_cape": "Cape of Triton",
   "item.examplemod.water_mask": "Mask of Poseidon",
-  
-  "_comment": "Accessory Set Bonuses",
+
+  "_comment_set_bonuses": "Accessory Set Bonuses",
   "accessory.examplemod.set_bonus.fire": "Fire Set Bonus: +5 Elemental Power, +3 Damage",
   "accessory.examplemod.set_bonus.water": "Water Set Bonus: +30 Mana, +5 Mana Regen, +5 Defense",
   "accessory.examplemod.max_set_bonus.fire": "MAX Fire Set: +15 Elemental Power, +10 Damage, +50 Mana",
   "accessory.examplemod.max_set_bonus.water": "MAX Water Set: +100 Mana, +15 Mana Regen, +10 Defense, +20 Health",
-  
-  "_comment": "Spell Book Screen",
+
+  "_comment_ui": "Spell Book Screen",
   "screen.examplemod.spell_book": "Spell Book",
   "screen.examplemod.spell_book.tab.fire": "Fire",
   "screen.examplemod.spell_book.tab.water": "Water",
@@ -98,8 +96,8 @@
   "screen.examplemod.spell_book.damage": "Damage",
   "screen.examplemod.spell_book.mana_cost": "Mana Cost",
   "screen.examplemod.spell_book.visual": "Visual Effect",
-  
-  "_comment": "Fire Spells",
+
+  "_comment_fire_spells": "Fire Spells",
   "spell.examplemod.spark": "Spark",
   "spell.examplemod.spark.desc": "A tiny spark that ignites enemies",
   "spell.examplemod.ember": "Ember",
@@ -120,8 +118,12 @@
   "spell.examplemod.phoenix_rebirth.desc": "Rise as a phoenix, wings of flame consuming all",
   "spell.examplemod.solar_eclipse": "Solar Eclipse",
   "spell.examplemod.solar_eclipse.desc": "Harness the power of a dying star - absolute destruction",
-  
-  "_comment": "Water Spells",
+  "spell.examplemod.soul_fire_ritual": "Soul Fire Ritual",
+  "spell.examplemod.soul_fire_ritual.desc": "Summon haunting soul flames in a ritual circle",
+  "spell.examplemod.phoenix_necromancy": "Phoenix Necromancy",
+  "spell.examplemod.phoenix_necromancy.desc": "Raise a dark phoenix from the ashes",
+
+  "_comment_water_spells": "Water Spells",
   "spell.examplemod.water_splash": "Water Splash",
   "spell.examplemod.water_splash.desc": "Simple splash of water to push back enemies",
   "spell.examplemod.ice_shard": "Ice Shard",
@@ -134,18 +136,22 @@
   "spell.examplemod.tidal_wave.desc": "Massive wave sweeps away everything in its path",
   "spell.examplemod.blizzard": "Blizzard",
   "spell.examplemod.blizzard.desc": "Relentless storm of ice and snow",
+  "spell.examplemod.crystal_wave": "Crystal Wave",
+  "spell.examplemod.crystal_wave.desc": "A wave of crystalline energy pierces foes",
   "spell.examplemod.poseidon_wrath": "Poseidon's Wrath",
   "spell.examplemod.poseidon_wrath.desc": "Summon the sea god's fury with a lightning trident",
   "spell.examplemod.glacial_prison": "Glacial Prison",
   "spell.examplemod.glacial_prison.desc": "Encase enemies in an unbreakable ice cage",
+  "spell.examplemod.deep_freeze": "Deep Freeze",
+  "spell.examplemod.deep_freeze.desc": "A freezing blast stops foes in place",
   "spell.examplemod.ocean_guardian": "Ocean Guardian",
   "spell.examplemod.ocean_guardian.desc": "Summon an ancient guardian for protection and attack",
   "spell.examplemod.absolute_zero": "Absolute Zero",
   "spell.examplemod.absolute_zero.desc": "Stop time itself with an ice storm of cosmic cold",
-  
-  "_comment": "Accessories Slots",
+
+  "_comment_slots": "Accessories Slots",
   "accessories.slot.ring": "Ring",
-  "accessories.slot.necklace": "Necklace", 
+  "accessories.slot.necklace": "Necklace",
   "accessories.slot.bracelet": "Bracelet",
   "accessories.slot.belt": "Belt",
   "accessories.slot.charm": "Charm",
@@ -158,8 +164,8 @@
   "accessories.slot.boots": "Boots",
   "accessories.slot.cape": "Cape",
   "accessories.slot.mask": "Mask",
-  
-  "_comment": "Accessory Rarities",
+
+  "_comment_rarities": "Accessory Rarities",
   "rarity.common": "Common",
   "rarity.uncommon": "Uncommon",
   "rarity.rare": "Rare",
@@ -167,11 +173,11 @@
   "rarity.legendary": "Legendary",
   "rarity.mythical": "Mythical",
   "rarity.absolute": "Absolute",
-  
-  "_comment": "Custom Effects",
+
+  "_comment_effects": "Custom Effects",
   "effect.examplemod.mana_regeneration": "Mana Regeneration",
-  
-  "_comment": "Creative Tabs",
+
+  "_comment_tabs": "Creative Tabs",
   "itemGroup.examplemod.project_radiation": "ProjectRadiation",
   "itemGroup.examplemod.rings": "Rings",
   "itemGroup.examplemod.necklaces": "Necklaces",
